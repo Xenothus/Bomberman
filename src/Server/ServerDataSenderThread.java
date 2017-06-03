@@ -27,6 +27,7 @@ public class ServerDataSenderThread implements Runnable {
     {
         try (DatagramSocket socket = new DatagramSocket())
         {
+            // TODO Server has to send data to client, so you need to get client IP and put it here
             InetAddress ip = InetAddress.getByName(DEFAULT_SERVER_IP);
             byte[] buffer = new byte[BUFFER_SIZE_UDP];
             while (true)

@@ -43,6 +43,7 @@ public class ServerMainThread implements Runnable {
     //For future
     private int getNextPortUDP()
     {
-        return nextPortUDP++;
+        nextPortUDP += 2;
+        return nextPortUDP;
     }
 }
