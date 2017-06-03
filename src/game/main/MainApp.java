@@ -1,11 +1,12 @@
-package Main;
+package game.main;
 
-import Server.*;
+import server.*;
 
 public class MainApp {
 
     public static void main (String args[])
     {
+        World.getInstance();    //first initialization of world
         new Thread(new ServerMainThread()).start();
     }
 }

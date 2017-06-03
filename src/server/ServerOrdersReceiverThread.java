@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import java.io.*;
 import java.net.DatagramPacket;
@@ -6,18 +6,21 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public class ServerOrdersReceiverThread implements Runnable {
+import game.main.World;
 
-    private final static String DEFAULT_SERVER_IP = "127.0.0.1";
-    private final static int BUFFER_SIZE_UDP = 1024;
+import static server.Config.*;
+
+public class ServerOrdersReceiverThread implements Runnable {
 
     private Socket socket;
     private int portUDP;
+    private int clientID;
 
-    public ServerOrdersReceiverThread(Socket socket, int portUDP)
+    public ServerOrdersReceiverThread(Socket socket, int portUDP, int clientID)
     {
         this.socket = socket;
         this.portUDP = portUDP;
+        this.clientID = clientID;
     }
 
     @Override
@@ -54,6 +57,8 @@ public class ServerOrdersReceiverThread implements Runnable {
         {
             System.out.println(in.readUTF());
             out.writeUTF(Integer.toString(portUDP));
+
+            World.getInstance().addNewPlayer(clientID);
         }
         catch (IOException e)
         {

@@ -1,10 +1,9 @@
-package Server;
+package server;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.util.Objects;
 
 /**
  * Created by Oem on 2017-06-03.
@@ -27,7 +26,7 @@ public class ServerDataSenderThread implements Runnable {
     {
         try (DatagramSocket socket = new DatagramSocket())
         {
-            // TODO Server has to send data to client, so you need to get client IP and put it here
+            // TODO server has to send data to client, so you need to get client IP and put it here
             InetAddress ip = InetAddress.getByName(DEFAULT_SERVER_IP);
             byte[] buffer = new byte[BUFFER_SIZE_UDP];
             while (true)

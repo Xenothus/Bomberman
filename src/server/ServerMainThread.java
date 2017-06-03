@@ -1,4 +1,4 @@
-package Server;
+package server;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -6,18 +6,20 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class ServerMainThread implements Runnable {
+import static server.Config.*;
 
-    private final static int MAIN_PORT = 8888;
-
-    private final static int CLIENTS_MAX_NUM = 4;
-
+public class ServerMainThread implements Runnable
+{
     private final ExecutorService executor = Executors.newFixedThreadPool(CLIENTS_MAX_NUM);
     private int nextPortUDP;
+    private int nextClientID;
+    private int clientsCount;
 
     public ServerMainThread()
     {
-        nextPortUDP = 8000;
+        nextPortUDP = INITIAL_UDP_PORT;
+        nextClientID = 0;
+        clientsCount = 0;
     }
 
     @Override
@@ -27,10 +29,14 @@ public class ServerMainThread implements Runnable {
         {
             while (true)
             {
+                if (clientsCount > 4)
+                    continue;
+
                 final Socket socket = serverSocket.accept();
                 if (socket != null)
                 {
-                    executor.submit(new ServerOrdersReceiverThread(socket, getNextPortUDP()));
+                    executor.submit(new ServerOrdersReceiverThread(socket, getNextPortUDP(), getNextClientID()));
+                    clientsCount++;
                 }
             }
         }
@@ -45,5 +51,10 @@ public class ServerMainThread implements Runnable {
     {
         nextPortUDP += 2;
         return nextPortUDP;
+    }
+
+    private int getNextClientID()
+    {
+        return nextClientID++;
     }
 }
