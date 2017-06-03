@@ -13,6 +13,7 @@ import static server.Config.*;
 public class ServerOrdersReceiverThread implements Runnable {
 
     private Socket socket;
+    private InetAddress clientIP;
     private int portUDP;
     private int clientID;
 
@@ -27,7 +28,7 @@ public class ServerOrdersReceiverThread implements Runnable {
     public void run()
     {
         connectWithClient();
-        new Thread(new ServerDataSenderThread(portUDP + 1)).start();
+        new Thread(new ServerDataSenderThread(clientIP, portUDP + 1)).start();
 
         try (DatagramSocket socket = new DatagramSocket(portUDP))
         {
@@ -55,7 +56,8 @@ public class ServerOrdersReceiverThread implements Runnable {
              DataOutputStream out = new DataOutputStream(
                      new BufferedOutputStream(socket.getOutputStream())))
         {
-            System.out.println(in.readUTF());
+            clientIP = InetAddress.getByName(in.readUTF());
+            //System.out.println(in.readUTF());
             out.writeUTF(Integer.toString(portUDP));
 
             World.getInstance().addNewPlayer(clientID);
