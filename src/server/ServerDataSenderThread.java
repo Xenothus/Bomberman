@@ -29,6 +29,7 @@ public class ServerDataSenderThread implements Runnable {
         {
             // TODO server has to send data to client, so you need to get client IP and put it here
             byte[] buffer = new byte[BUFFER_SIZE_UDP];
+
             while (true)
             {
                 //Sending data to client

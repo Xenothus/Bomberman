@@ -65,10 +65,10 @@ public class World
             }
         }
 
-        Thread Refresher = new Thread(()->{     //TUTAJ
+/*        Thread Refresher = new Thread(()->{     //TUTAJ
             while(true) this.showWorld();
         });
-        Refresher.start();
+        Refresher.start();*/
     }
 
     public byte[][] getDefaultWorldMap()
@@ -87,9 +87,32 @@ public class World
         return map;
     }
 
-    public void addNewPlayer(int ID)
+    public synchronized void addNewPlayer(int ID)
     {
         players.add(new Player(this, ID));
+    }
+
+    public synchronized void executeCommand(int ID, byte command)
+    {
+        int i;
+        boolean found = false;
+        for (i = 0; i < players.size(); i++)
+        {
+            if (players.get(i).myID == ID)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (found != true)
+        {
+            System.err.println("Could not find player");
+            return;
+        }
+
+        players.get(i).performAction(command);
+        showWorld();    //todelete
     }
 
     public void placeBomb(Position pos)
@@ -208,5 +231,19 @@ public class World
 
         //Zamiast tego bedzie wysylanie do klientow
         //view.updateMap(viewModel);
+
+
+        //todelete
+/*        for (int i = 0; i < COLS; i++)
+        {
+            for (int k = 0; k < ROWS; k++)
+            {
+                System.out.print(viewModel[i][k]);
+            }
+            System.out.print("\n");
+        }
+
+        System.out.print("\n");
+        System.out.print("\n");*/
     }
 }

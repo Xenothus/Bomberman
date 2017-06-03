@@ -10,14 +10,14 @@ import game.main.World;
 
 import static server.Config.*;
 
-public class ServerOrdersReceiverThread implements Runnable {
+public class ServerCommandsReceiverThread implements Runnable {
 
     private Socket socket;
     private InetAddress clientIP;
     private int portUDP;
     private int clientID;
 
-    public ServerOrdersReceiverThread(Socket socket, int portUDP, int clientID)
+    public ServerCommandsReceiverThread(Socket socket, int portUDP, int clientID)
     {
         this.socket = socket;
         this.portUDP = portUDP;
@@ -34,13 +34,20 @@ public class ServerOrdersReceiverThread implements Runnable {
         {
             InetAddress ip = InetAddress.getByName(DEFAULT_SERVER_IP);
             byte[] buffer = new byte[BUFFER_SIZE_UDP];
+
             while (true)
             {
                 //Receiving order message from client
                 DatagramPacket dp = new DatagramPacket(buffer, BUFFER_SIZE_UDP);
                 socket.receive(dp);
-                String receivedOrder = new String(dp.getData(), 0, dp.getLength());
-                System.out.println(receivedOrder);
+                byte command = buffer[0];
+
+/*                Byte b = buffer[0];
+                int ok = b.intValue();
+                //String receivedOrder = new String(dp.getData(), 0, dp.getLength());
+                System.out.println(Integer.toString(ok));*/
+
+                World.getInstance().executeCommand(clientID, command);
             }
         }
         catch (IOException e)
