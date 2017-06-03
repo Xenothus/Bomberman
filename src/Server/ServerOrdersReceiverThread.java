@@ -6,7 +6,7 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.Socket;
 
-public class ClientServiceThread implements Runnable {
+public class ServerOrdersReceiverThread implements Runnable {
 
     private final static String DEFAULT_SERVER_IP = "127.0.0.1";
     private final static int BUFFER_SIZE_UDP = 1024;
@@ -14,7 +14,7 @@ public class ClientServiceThread implements Runnable {
     private Socket socket;
     private int portUDP;
 
-    public ClientServiceThread(Socket socket, int portUDP)
+    public ServerOrdersReceiverThread(Socket socket, int portUDP)
     {
         this.socket = socket;
         this.portUDP = portUDP;
@@ -24,6 +24,7 @@ public class ClientServiceThread implements Runnable {
     public void run()
     {
         connectWithClient();
+        new Thread(new ServerDataSenderThread(portUDP + 1)).start();
 
         try (DatagramSocket socket = new DatagramSocket(portUDP))
         {
@@ -36,12 +37,6 @@ public class ClientServiceThread implements Runnable {
                 socket.receive(dp);
                 String receivedOrder = new String(dp.getData(), 0, dp.getLength());
                 System.out.println(receivedOrder);
-
-                //Sending OK response to client
-                String message = "OK";
-                DatagramPacket dps = new DatagramPacket(
-                        message.getBytes(), message.length(), ip, portUDP);
-                socket.send(dp);
             }
         }
         catch (IOException e)

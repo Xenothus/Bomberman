@@ -30,7 +30,7 @@ public class ServerMainThread implements Runnable {
                 final Socket socket = serverSocket.accept();
                 if (socket != null)
                 {
-                    executor.submit(new ClientServiceThread(socket, getNextPortUDP()));
+                    executor.submit(new ServerOrdersReceiverThread(socket, getNextPortUDP()));
                 }
             }
         }
