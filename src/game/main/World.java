@@ -112,7 +112,7 @@ public class World
         }
 
         players.get(i).performAction(command);
-        showWorld();    //todelete
+        //showWorld();    //todelete
     }
 
     public void placeBomb(Position pos)
@@ -189,7 +189,7 @@ public class World
         flames.remove(flame);
     }
 
-    public void showWorld()
+    public synchronized byte[][] getViewTable()
     {
         byte [][] viewModel = new byte[COLS][ROWS];
         for(int i = 0; i< COLS;i++){
@@ -245,5 +245,7 @@ public class World
 
         System.out.print("\n");
         System.out.print("\n");*/
+
+        return viewModel;
     }
 }

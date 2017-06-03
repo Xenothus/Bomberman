@@ -46,7 +46,7 @@ public class ServerCommandsReceiverThread implements Runnable {
                 int ok = b.intValue();
                 //String receivedOrder = new String(dp.getData(), 0, dp.getLength());
                 System.out.println(Integer.toString(ok));*/
-
+                System.out.println("OK");
                 World.getInstance().executeCommand(clientID, command);
             }
         }

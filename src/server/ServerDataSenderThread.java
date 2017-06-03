@@ -1,5 +1,7 @@
 package server;
 
+import game.main.World;
+
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
@@ -10,6 +12,7 @@ import java.net.InetAddress;
  */
 
 import static server.Config.*;
+import static game.main.Config.*;
 
 public class ServerDataSenderThread implements Runnable {
 
@@ -33,9 +36,20 @@ public class ServerDataSenderThread implements Runnable {
             while (true)
             {
                 //Sending data to client
-                String message = "Some very important data";
+                byte[][] array2D = World.getInstance().getViewTable();
+                int bufferIt = 0;
+                for (int i = 0; i < COLS; i++)
+                {
+                    for (int k = 0; k < ROWS; k++)
+                    {
+                        buffer[bufferIt] = array2D[i][k];
+                        bufferIt++;
+                        //System.out.println(bufferIt);
+                    }
+                }
+
                 DatagramPacket dps = new DatagramPacket(
-                        message.getBytes(), message.length(), clientIP, portUDP);
+                        buffer, BUFFER_SIZE_UDP, clientIP, portUDP);
                 socket.send(dps);
             }
         }
@@ -44,4 +58,5 @@ public class ServerDataSenderThread implements Runnable {
             e.printStackTrace();
         }
     }
+
 }
