@@ -44,7 +44,6 @@ public class ServerDataSenderThread implements Runnable {
                     {
                         buffer[bufferIt] = array2D[i][k];
                         bufferIt++;
-                        //System.out.println(bufferIt);
                     }
                 }
 

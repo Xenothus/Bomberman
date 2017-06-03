@@ -42,11 +42,6 @@ public class ServerCommandsReceiverThread implements Runnable {
                 socket.receive(dp);
                 byte command = buffer[0];
 
-/*                Byte b = buffer[0];
-                int ok = b.intValue();
-                //String receivedOrder = new String(dp.getData(), 0, dp.getLength());
-                System.out.println(Integer.toString(ok));*/
-                System.out.println("OK");
                 World.getInstance().executeCommand(clientID, command);
             }
         }
@@ -64,7 +59,6 @@ public class ServerCommandsReceiverThread implements Runnable {
                      new BufferedOutputStream(socket.getOutputStream())))
         {
             clientIP = InetAddress.getByName(in.readUTF());
-            //System.out.println(in.readUTF());
             out.writeUTF(Integer.toString(portUDP));
 
             World.getInstance().addNewPlayer(clientID);
