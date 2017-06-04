@@ -146,7 +146,6 @@ public class World
         int x = pos.getX();
         int y = pos.getY();
 
-
         //MID
         if (actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
         {
@@ -158,78 +157,29 @@ public class World
                     .die();
         }
 
-
-        //UP
+        //UP, DOWN, LEFT, RIGHT
         Block currentBlock;
-        for (int i = 1; i <= blastRadius; i++)
+        int Xi, Yi;
+
+        for (int direction = 0; direction < 4; direction++)
         {
-            if (y - i >= 0)
+            for (int i = 1; i <= blastRadius; i++)
             {
-                currentBlock = actualWorld[x][y - i];
+                Xi = x + i * POSITIONS[direction][X];
+                Yi = y + i * POSITIONS[direction][Y];
+
+                if (Xi < 0 || Xi >= COLS ||
+                    Yi < 0 || Yi >= ROWS)
+                    return;
+
+                currentBlock = actualWorld[Xi][Yi];
 
                 if (currentBlock == null || currentBlock.isDestroyable())
                 {
-                    pattern[UP][i - 1] = 1;
-                    if (checkBlock(currentBlock, x, y - i))
-                        actualWorld[x][y - i] = new Clear();
+                    pattern[direction][i - 1] = 1;
+                    checkBlock(currentBlock, Xi, Yi);
                 }
-                else break;
             }
-            else break;
-        }
-
-        //LEFT
-        for (int i = 1; i <= blastRadius; i++)
-        {
-            if (x - i >= 0)
-            {
-                currentBlock = actualWorld[x - i][y];
-
-                if (currentBlock == null || currentBlock.isDestroyable())
-                {
-                    pattern[LEFT][i - 1] = 1;
-                    if (checkBlock(currentBlock, x - i, y))
-                        actualWorld[x - i][y] = new Clear();
-                }
-                else break;
-            }
-            else break;
-        }
-
-        //RIGHT
-        for (int i = 1; i <= blastRadius; i++)
-        {
-            if (x + i < COLS)
-            {
-                currentBlock = actualWorld[x + i][y];
-
-                if (currentBlock == null || currentBlock.isDestroyable())
-                {
-                    pattern[RIGHT][i - 1] = 1;
-                    if (checkBlock(currentBlock, x + i, y))
-                        actualWorld[x + i][y] = new Clear();
-                }
-                else break;
-            }
-            else break;
-        }
-
-        //DOWN
-        for (int i = 1; i <= blastRadius; i++)
-        {
-            if (y + i < ROWS)
-            {
-                currentBlock = actualWorld[x][y + i];
-
-                if (currentBlock == null || currentBlock.isDestroyable())
-                {
-                    pattern[DOWN][i - 1] = 1;
-                    if (checkBlock(currentBlock, x, y + i))
-                        actualWorld[x][y + i] = new Clear();
-                }
-                else break;
-            }
-            else break;
         }
 
         Flame flame = new Flame(pos,this, pattern);
@@ -263,6 +213,10 @@ public class World
             case WOOD_WITH_EXTRA_GUNPOWDER:
                 actualWorld[x][y] = new ExtraGunpowder();
                 return false;
+
+            default:
+                actualWorld[x][y] = new Clear();
+                break;
         }
 
         return true;
