@@ -1,6 +1,7 @@
 package game.main;
 
 import game.auxiliary.Position;
+import game.blocks.Bomb;
 import game.blocks.Bomberman;
 import game.blocks.Clear;
 
@@ -37,7 +38,16 @@ public class Player
 
     void placeBomb(int x, int y)
     {
-        world.placeBomb(new Position(x, y), bombBlastRadius);
+        Bomb bomb = new Bomb(new Position(x, y), world, bombBlastRadius);
+
+        try {
+            Thread.sleep(10);
+        }catch(InterruptedException e){}
+
+        world.actualWorld[position.getX()][position.getY()] = bomb;
+        world.bombs.add(bomb);
+
+        new Thread(bomb).start();
     }
 
     public void performAction(byte command)
@@ -94,6 +104,8 @@ public class Player
 
     private void moveOut()
     {
+        if (world.actualWorld[position.getX()][position.getY()].getSpecies() == BOMB)
+            System.out.println("HELLO!!!");
         world.actualWorld[position.getX()][position.getY()] = new Clear();
     }
 
