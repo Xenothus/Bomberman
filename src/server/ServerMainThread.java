@@ -29,7 +29,7 @@ public class ServerMainThread implements Runnable
         {
             while (true)
             {
-                if (clientsCount > 4)
+                if (clientsCount > CLIENTS_MAX_NUM)
                     continue;
 
                 final Socket socket = serverSocket.accept();

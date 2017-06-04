@@ -64,11 +64,6 @@ public class World
                 if (map[i][j] == BRICK) actualWorld[i][j] = new Brick();
             }
         }
-
-/*        Thread Refresher = new Thread(()->{     //TUTAJ
-            while(true) this.showWorld();
-        });
-        Refresher.start();*/
     }
 
     public byte[][] getDefaultWorldMap()
@@ -98,21 +93,20 @@ public class World
         boolean found = false;
         for (i = 0; i < players.size(); i++)
         {
-            if (players.get(i).myID == ID)
+            if (players.get(i).ID == ID)
             {
                 found = true;
                 break;
             }
         }
 
-        if (found != true)
+        if (!found)
         {
             System.err.println("Could not find player");
             return;
         }
 
         players.get(i).performAction(command);
-        //showWorld();    //todelete
     }
 
     public void placeBomb(Position pos)

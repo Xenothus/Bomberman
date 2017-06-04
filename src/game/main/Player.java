@@ -9,26 +9,22 @@ import static game.main.Config.*;
  */
 public class Player
 {
-    public int myID;
+    public int ID;
     public Position position;
 
     private World world;
     private boolean isAlive;
     private char action;
 
-    public Player(World world, int ID) //dodac parametr initialPosition
+    public Player(World world, int ID)
     {
-        myID = ID;
+        this.ID = ID;
         this.world = world;
         isAlive = true;
         action = 0;
-        position = new Position(1,1);
+        position = PLAYERS_INITIAL_POSITIONS[ID];
     }
 
-    public void setWorld(World w)
-    {
-        world = w;
-    }
     void placeBomb(int x, int y)
     {
         world.placeBomb(new Position(x, y));

@@ -1,5 +1,7 @@
 package game.main;
 
+import game.auxiliary.Position;
+
 /**
  * Created by Oem on 2017-06-03.
  */
@@ -16,6 +18,13 @@ public class Config
     public final static byte WOOD = 3;
     public final static byte BRICK = 4;
     public final static byte BOMBERMAN = 5;
+
+    public final static Position[] PLAYERS_INITIAL_POSITIONS = {
+            new Position(1, 1),
+            new Position(COLS - 2, 1),
+            new Position(1, ROWS - 2),
+            new Position(COLS - 2, ROWS - 2),
+    };
 
     public final static byte MOVE_UP = 1;
     public final static byte MOVE_DOWN = 2;
