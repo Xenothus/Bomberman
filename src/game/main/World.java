@@ -147,7 +147,7 @@ public class World
         int y = pos.getY();
 
         //MID
-        if (actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
+        if (actualWorld[x][y].isPlayerOnBomb())
         {
             players.get(
                     findPlayerIndexWithID(
@@ -170,7 +170,7 @@ public class World
 
                 if (Xi < 0 || Xi >= COLS ||
                     Yi < 0 || Yi >= ROWS)
-                    return;
+                    break;
 
                 currentBlock = actualWorld[Xi][Yi];
 
@@ -179,6 +179,7 @@ public class World
                     pattern[direction][i - 1] = 1;
                     checkBlock(currentBlock, Xi, Yi);
                 }
+                else break;
             }
         }
 
@@ -194,32 +195,33 @@ public class World
         new Thread(flame).start();
     }
 
-    private boolean checkBlock(Block block, int x, int y)
+    private void checkBlock(Block block, int x, int y)
     {
+        if (block.isPlayer())
+        {
+            players.get(findPlayerIndexWithID(block.getPlayerID())).die();
+            actualWorld[x][y] = new Clear();
+            return;
+        }
+
         switch (block.getSpecies())
         {
-            case BOMBERMAN:
-                players.get(findPlayerIndexWithID(block.getPlayerID())).die();
-                break;
-
             case BOMB:
                 ((Bomb) block).explode();
                 break;
 
             case WOOD_WITH_EXTRA_BOMB:
                 actualWorld[x][y] = new ExtraBomb();
-                return false;
+                break;
 
             case WOOD_WITH_EXTRA_GUNPOWDER:
                 actualWorld[x][y] = new ExtraGunpowder();
-                return false;
+                break;
 
             default:
                 actualWorld[x][y] = new Clear();
                 break;
         }
-
-        return true;
     }
 
     public void stopFlame(Flame flame)

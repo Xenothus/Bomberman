@@ -1,6 +1,6 @@
 package game.blocks;
 
-import static game.main.Config.BOMBERMAN;
+import static game.main.Config.BOMBERMEN;
 
 /**
  * Created by Oem on 2017-06-04.
@@ -14,7 +14,8 @@ public class Bomberman extends Block
         this.playerID = playerID;
 
         walkable = false;
-        species = BOMBERMAN;
+        player = true;
+        species = BOMBERMEN[playerID];
         destroyable = true;
     }
 

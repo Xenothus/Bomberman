@@ -16,7 +16,8 @@ public class BombermanOnBomb extends Block
         this.bomb = bomb;
 
         walkable = false;
-        species = BOMBERMAN_ON_BOMB;
+        playerOnBomb = true;
+        species = BOMBERMEN_ON_BOMB[bomberman.getPlayerID()];
     }
 
     public Bomberman getBomberman()

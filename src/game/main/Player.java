@@ -82,7 +82,7 @@ public class Player
         {
             Position destination = new Position(x + xStep, y + yStep);
 
-            if (world.actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
+            if (world.actualWorld[x][y].isPlayerOnBomb())
                 getOutOfBomb(position, destination);
             else if (world.actualWorld[x + xStep][y + yStep].getSpecies() == BOMB)
                 standOnBomb(position, destination);
