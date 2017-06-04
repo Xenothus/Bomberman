@@ -18,6 +18,7 @@ public class Config
     public final static byte WOOD = 3;
     public final static byte BRICK = 4;
     public final static byte BOMBERMAN = 5;
+    public final static byte BOMBERMAN_ON_BOMB = 6;
 
     public final static Position[] PLAYERS_INITIAL_POSITIONS = {
             new Position(1, 1),

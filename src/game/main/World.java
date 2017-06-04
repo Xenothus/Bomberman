@@ -1,10 +1,6 @@
 package game.main;
 
-import game.blocks.Block;
-import game.blocks.Brick;
-import game.blocks.Clear;
-import game.blocks.Wood;
-import game.blocks.Bomb;
+import game.blocks.*;
 import game.effects.Flame;
 import game.auxiliary.Position;
 
@@ -134,6 +130,18 @@ public class World
 
         int x = pos.getX();
         int y = pos.getY();
+
+        if (actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
+        {
+            System.out.println("HELLO PLAYER");
+            players.get(
+                    findPlayerIndexWithID(
+                            ((BombermanOnBomb) actualWorld[x][y])
+                                    .getBomberman()
+                                    .getPlayerID()))
+                    .die();
+        }
+
 
         //UP
         Block currentBlock;

@@ -3,6 +3,7 @@ package game.main;
 import game.auxiliary.Position;
 import game.blocks.Bomb;
 import game.blocks.Bomberman;
+import game.blocks.BombermanOnBomb;
 import game.blocks.Clear;
 
 import static game.main.Config.*;
@@ -20,6 +21,8 @@ public class Player
 
     private int bombsCount;
     private int bombBlastRadius;
+
+    private Position prevPosition;
 
     public Player(World world, int ID)
     {
@@ -59,41 +62,65 @@ public class Player
         int x = position.getX();
         int y = position.getY();
 
+        prevPosition = new Position(position.getX(), position.getY());
+
+        Position destination;
+
         switch(command)
         {
             case MOVE_UP:
                 if (x - 1 >= 0 && world.actualWorld[x][y - 1].isWalkable())
                 {
-                    moveOut();
-                    position.setY(y - 1);
-                    moveIn();
+                    destination = new Position(x, y - 1);
+
+                    if (world.actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
+                        getOutOfBomb(position, destination);
+                    else if (world.actualWorld[x][y - 1].getSpecies() == BOMB)
+                        standOnBomb(position, destination);
+                    else
+                        simpleMove(position, destination);
                 }
                 break;
 
             case MOVE_LEFT:
                 if (x - 1 >= 0 && world.actualWorld[x - 1][y].isWalkable())
                 {
-                    moveOut();
-                    position.setX(x - 1);
-                    moveIn();
+                    destination = new Position(x - 1, y);
+
+                    if (world.actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
+                        getOutOfBomb(position, destination);
+                    else if (world.actualWorld[x - 1][y].getSpecies() == BOMB)
+                        standOnBomb(position, destination);
+                    else
+                        simpleMove(position, destination);
                 }
                 break;
 
             case MOVE_DOWN:
                 if (y + 1 < ROWS && world.actualWorld[x][y + 1].isWalkable())
                 {
-                    moveOut();
-                    position.setY(y + 1);
-                    moveIn();
+                    destination = new Position(x, y + 1);
+
+                    if (world.actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
+                        getOutOfBomb(position, destination);
+                    else if (world.actualWorld[x][y + 1].getSpecies() == BOMB)
+                        standOnBomb(position, destination);
+                    else
+                        simpleMove(position, destination);
                 }
                 break;
 
             case MOVE_RIGHT:
                 if (x + 1 < COLS && world.actualWorld[x + 1][y].isWalkable())
                 {
-                    moveOut();
-                    position.setX(x + 1);
-                    moveIn();
+                    destination = new Position(x + 1, y);
+
+                    if (world.actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
+                        getOutOfBomb(position, destination);
+                    else if (world.actualWorld[x + 1][y].getSpecies() == BOMB)
+                        standOnBomb(position, destination);
+                    else
+                        simpleMove(position, destination);
                 }
                 break;
 
@@ -103,30 +130,35 @@ public class Player
         }
     }
 
-    private void moveOut()
+    private void simpleMove(Position current, Position destination)
     {
-        if (world.actualWorld[position.getX()][position.getY()].getSpecies() == BOMB)
-            standOnBomb();
-        else
-            world.actualWorld[position.getX()][position.getY()] = new Clear();
+        world.actualWorld[current.getX()][current.getY()] = new Clear();
+        world.actualWorld[destination.getX()][destination.getY()] = new Bomberman(ID);
+        position = destination;
     }
 
-    private void moveIn()
+    private void getOutOfBomb(Position current, Position destination)
     {
-        if (world.actualWorld[position.getX()][position.getY()].getSpecies() == BOMB)
-            getOutOfBomb();
-        else
-            world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
+        world.actualWorld[current.getX()][current.getY()] =
+                ((BombermanOnBomb) world.actualWorld[current.getX()][current.getY()]).getBomb();
+
+        world.actualWorld[destination.getX()][destination.getY()] = new Bomberman(ID);
+        position = destination;
     }
 
-    private void standOnBomb()
+    private void standOnBomb(Position current, Position destination)
     {
+        BombermanOnBomb bob = new BombermanOnBomb(
+                (Bomberman) world.actualWorld[current.getX()][current.getY()],
+                (Bomb) world.actualWorld[destination.getX()][destination.getY()]
+        );
 
-    }
+        world.actualWorld[current.getX()][current.getY()] = new Clear();
+        world.actualWorld[destination.getX()][destination.getY()] = new Clear();
 
-    private void getOutOfBomb()
-    {
+        world.actualWorld[destination.getX()][destination.getY()] = bob;
 
+        position = destination;
     }
 
     private void placeBomb()
@@ -136,7 +168,7 @@ public class Player
 
         bombsCount--;
         Bomb bomb = new Bomb(world, this,
-                new Position(position.getX(), position.getY()), bombBlastRadius);
+                new Position(position.getX()+1, position.getY()), bombBlastRadius);
         world.placeBomb(bomb);
     }
 }
