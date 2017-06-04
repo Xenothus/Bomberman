@@ -8,6 +8,7 @@ public abstract class Block
     protected byte species;
     protected boolean destroyable;
     protected boolean walkable;
+    protected boolean player = false;
 
     public boolean isDestroyable()
     {
@@ -19,8 +20,18 @@ public abstract class Block
         return species;
     }
 
+    public int getPlayerID()
+    {
+        return -1;
+    }
+
     public boolean isWalkable()
     {
         return walkable;
+    }
+
+    public boolean isPlayer()
+    {
+        return player;
     }
 }

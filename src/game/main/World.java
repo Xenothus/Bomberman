@@ -109,6 +109,28 @@ public class World
         players.get(i).performAction(command);
     }
 
+    private int findPlayerIndexWithID(int ID)
+    {
+        int i;
+        boolean found = false;
+        for (i = 0; i < players.size(); i++)
+        {
+            if (players.get(i).ID == ID)
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            System.err.println("Could not find player");
+            return -1;
+        }
+
+        return i;
+    }
+
     public void placeBomb(Position pos)
     {
         if (!bombs.isEmpty())
@@ -130,7 +152,6 @@ public class World
             for(int j=0;j<3;j++)pattern[i][j] = 0;
         }
 
-        pattern[1][1] = 1;
         Position bombPos = pos;
         Position srodek = new Position(bombPos.getX(), bombPos.getY());
         Position gora = new Position(bombPos.getX() , bombPos.getY()-1);
@@ -138,36 +159,65 @@ public class World
         Position prawo = new Position(bombPos.getX() + 1, bombPos.getY());
         Position dol = new Position(bombPos.getX() , bombPos.getY() + 1);
 
-        if(gora.getY() >=0
-                && (actualWorld[gora.getX()][gora.getY()] == null
-                    || actualWorld[gora.getX()][gora.getY()].isDestroyable())){
+        if (srodek.getY() >=0 &&
+                (actualWorld[srodek.getX()][srodek.getY()] == null ||
+                        actualWorld[srodek.getX()][srodek.getY()].isDestroyable()))
+        {
+            pattern[1][1] = 1;
+            if (actualWorld[srodek.getX()][srodek.getY()].isPlayer())
+                players.get(findPlayerIndexWithID(actualWorld[srodek.getX()][srodek.getY()].getPlayerID())).die();
+
+            actualWorld[srodek.getX()][srodek.getY()] = new Clear();
+        }
+
+
+        if (gora.getY() >=0 &&
+                (actualWorld[gora.getX()][gora.getY()] == null ||
+                 actualWorld[gora.getX()][gora.getY()].isDestroyable()))
+        {
             pattern[1][0] = 1;
-            if(actualWorld[gora.getX()][gora.getY()].isDestroyable())actualWorld[gora.getX()][gora.getY()] = new Clear();
+            if (actualWorld[gora.getX()][gora.getY()].isPlayer())
+                players.get(findPlayerIndexWithID(actualWorld[gora.getX()][gora.getY()].getPlayerID())).die();
+
+            actualWorld[gora.getX()][gora.getY()] = new Clear();
         }
 
 
-        if(lewo.getX() >= 0
-                && (actualWorld[lewo.getX()][lewo.getY()] == null
-                    || actualWorld[lewo.getX()][lewo.getY()].isDestroyable())){
+        if (lewo.getY() >=0 &&
+                (actualWorld[lewo.getX()][lewo.getY()] == null ||
+                 actualWorld[lewo.getX()][lewo.getY()].isDestroyable()))
+        {
             pattern[0][1] = 1;
-            if(actualWorld[lewo.getX()][lewo.getY()].isDestroyable())actualWorld[lewo.getX()][lewo.getY()] = new Clear();
+            if (actualWorld[lewo.getX()][lewo.getY()].isPlayer())
+                players.get(findPlayerIndexWithID(actualWorld[lewo.getX()][lewo.getY()].getPlayerID())).die();
+
+            actualWorld[lewo.getX()][lewo.getY()] = new Clear();
         }
 
 
-        if(prawo.getX() < COLS
-                && ( actualWorld[prawo.getX()][prawo.getY()] == null
-                    || actualWorld[prawo.getX()][prawo.getY()].isDestroyable())){
+        if (prawo.getY() >=0 &&
+                (actualWorld[prawo.getX()][prawo.getY()] == null ||
+                 actualWorld[prawo.getX()][prawo.getY()].isDestroyable()))
+        {
             pattern[2][1] = 1;
-            if(actualWorld[prawo.getX()][prawo.getY()].isDestroyable())actualWorld[prawo.getX()][prawo.getY()] =new Clear();
+            if (actualWorld[prawo.getX()][prawo.getY()].isPlayer())
+                players.get(findPlayerIndexWithID(actualWorld[prawo.getX()][prawo.getY()].getPlayerID())).die();
+
+            actualWorld[prawo.getX()][prawo.getY()] = new Clear();
         }
 
 
-        if(dol.getY() < ROWS
-                && (actualWorld[dol.getX()][dol.getY()] == null
-                    || actualWorld[dol.getX()][dol.getY()].isDestroyable())){
+        if (dol.getY() >=0 &&
+                (actualWorld[dol.getX()][dol.getY()] == null ||
+                 actualWorld[dol.getX()][dol.getY()].isDestroyable()))
+        {
             pattern[1][2] = 1;
-            if(actualWorld[dol.getX()][dol.getY()].isDestroyable())actualWorld[dol.getX()][dol.getY()] = new Clear();
+            if (actualWorld[dol.getX()][dol.getY()].isPlayer())
+                players.get(findPlayerIndexWithID(actualWorld[dol.getX()][dol.getY()].getPlayerID())).die();
+
+            actualWorld[dol.getX()][dol.getY()] = new Clear();
         }
+
 
         Flame flame = new Flame(srodek,this,pattern);
         try {
@@ -220,8 +270,8 @@ public class World
         }
 
         //Petla ktora leci po wszystkich playerach
-        for (Player player : players)
-            viewModel[player.position.getX()][player.position.getY()] = BOMBERMAN;
+/*        for (Player player : players)
+            viewModel[player.position.getX()][player.position.getY()] = BOMBERMAN;*/
 
         //Zamiast tego bedzie wysylanie do klientow
         //view.updateMap(viewModel);
