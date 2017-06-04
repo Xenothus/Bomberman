@@ -250,7 +250,8 @@ public class World
             if (flame != null) {
                 if (!flame.isExisting())
                     it.remove();
-                else {
+                else
+                {
                     int x = flame.getPosition().getX();
                     int y = flame.getPosition().getY();
 

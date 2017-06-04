@@ -106,7 +106,7 @@ public class Player
     private void moveOut()
     {
         if (world.actualWorld[position.getX()][position.getY()].getSpecies() == BOMB)
-            System.out.println("HELLO!!!");
+            standOnBomb();
         else
             world.actualWorld[position.getX()][position.getY()] = new Clear();
     }
@@ -114,9 +114,19 @@ public class Player
     private void moveIn()
     {
         if (world.actualWorld[position.getX()][position.getY()].getSpecies() == BOMB)
-            System.out.println("OH MAH GAHD!!!");
+            getOutOfBomb();
         else
             world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
+    }
+
+    private void standOnBomb()
+    {
+
+    }
+
+    private void getOutOfBomb()
+    {
+
     }
 
     private void placeBomb()
