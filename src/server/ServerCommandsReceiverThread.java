@@ -61,6 +61,7 @@ public class ServerCommandsReceiverThread implements Runnable {
             String received = in.readUTF();
             clientIP = InetAddress.getByName(received);
             out.writeUTF(Integer.toString(portUDP));
+            System.out.println("Client connected: " + received);
 
             World.getInstance().addNewPlayer(clientID);
         }

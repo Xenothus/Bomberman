@@ -3,7 +3,6 @@ package game.main;
 import game.auxiliary.Position;
 import game.blocks.Bomberman;
 import game.blocks.Clear;
-import javafx.geometry.Pos;
 
 import static game.main.Config.*;
 
@@ -27,12 +26,13 @@ public class Player
         action = 0;
         position = PLAYERS_INITIAL_POSITIONS[ID];
         world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
+        System.out.println("Player " + ID + " joined game");
     }
 
     public void die()
     {
         isAlive = false;
-        System.out.println("Died");
+        System.out.println("Player " + ID + " died");
     }
 
     void placeBomb(int x, int y)

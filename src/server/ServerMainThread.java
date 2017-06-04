@@ -27,6 +27,9 @@ public class ServerMainThread implements Runnable
     {
         try (ServerSocket serverSocket = new ServerSocket(MAIN_PORT))
         {
+            System.out.println("Server is running \nIP: " + DEFAULT_SERVER_IP + " Port: " + MAIN_PORT);
+            System.out.println("////////////////////////////////////////");
+
             while (true)
             {
                 if (clientsCount > CLIENTS_MAX_NUM)
