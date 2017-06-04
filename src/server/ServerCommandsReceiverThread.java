@@ -58,7 +58,8 @@ public class ServerCommandsReceiverThread implements Runnable {
              DataOutputStream out = new DataOutputStream(
                      new BufferedOutputStream(socket.getOutputStream())))
         {
-            clientIP = InetAddress.getByName(in.readUTF());
+            String received = in.readUTF();
+            clientIP = InetAddress.getByName(received);
             out.writeUTF(Integer.toString(portUDP));
 
             World.getInstance().addNewPlayer(clientID);
