@@ -36,18 +36,16 @@ public class Player
         System.out.println("Player " + ID + " died");
     }
 
-    void placeBomb(int x, int y)
+    void placeBomb()
     {
-        Bomb bomb = new Bomb(new Position(x, y), world, bombBlastRadius);
+        Bomb bomb = new Bomb(world, this,
+            new Position(position.getX(), position.getY()), bombBlastRadius);
+        world.placeBomb(bomb);
+    }
 
-        try {
-            Thread.sleep(10);
-        }catch(InterruptedException e){}
-
-        world.actualWorld[position.getX()][position.getY()] = bomb;
-        world.bombs.add(bomb);
-
-        new Thread(bomb).start();
+    public void myBombIsDetonated()
+    {
+        System.out.println("OK thanks!!!");
     }
 
     public void performAction(byte command)
@@ -97,7 +95,7 @@ public class Player
                 break;
 
             case PLANT_BOMB:
-                placeBomb(x, y);
+                placeBomb();
                 break;
         }
     }
@@ -106,11 +104,15 @@ public class Player
     {
         if (world.actualWorld[position.getX()][position.getY()].getSpecies() == BOMB)
             System.out.println("HELLO!!!");
-        world.actualWorld[position.getX()][position.getY()] = new Clear();
+        else
+            world.actualWorld[position.getX()][position.getY()] = new Clear();
     }
 
     private void moveIn()
     {
-        world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
+        if (world.actualWorld[position.getX()][position.getY()].getSpecies() == BOMB)
+            System.out.println("OH MAH GAHD!!!");
+        else
+            world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
     }
 }
