@@ -127,7 +127,6 @@ public class World
 
     public synchronized void explodeBomb(Position pos, int blastRadius)
     {
-        System.out.println("OK");
         int[][] pattern = new int[4][blastRadius];
         for (int i = 0; i < pattern.length; i++)
             for (int k = 0; k < pattern[0].length; k++)
@@ -207,16 +206,6 @@ public class World
                 else break;
             }
             else break;
-        }
-
-        for (int i = 0; i < 4; i++)
-        {
-            for (int k = 0; k < pattern[0].length; k++)
-            {
-                System.out.print(pattern[i][k] + "\t");
-            }
-
-            System.out.print("\n");
         }
 
         Flame flame = new Flame(pos,this, pattern);
