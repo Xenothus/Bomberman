@@ -112,11 +112,17 @@ public class World
 
     public synchronized void placeBomb(Bomb bomb)
     {
+        int x = bomb.getPosition().getX();
+        int y = bomb.getPosition().getY();
+
         try {
             Thread.sleep(10);
         }catch(InterruptedException e){}
 
-        actualWorld[bomb.getPosition().getX()][bomb.getPosition().getY()] = bomb;
+        actualWorld[x][y] = new BombermanOnBomb(
+                (Bomberman) actualWorld[x][y],
+                bomb
+        );
 
         new Thread(bomb).start();
     }
@@ -131,9 +137,10 @@ public class World
         int x = pos.getX();
         int y = pos.getY();
 
+
+        //MID
         if (actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
         {
-            System.out.println("HELLO PLAYER");
             players.get(
                     findPlayerIndexWithID(
                             ((BombermanOnBomb) actualWorld[x][y])

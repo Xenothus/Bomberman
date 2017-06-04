@@ -15,6 +15,7 @@ public class BombermanOnBomb extends Block
         this.bomberman = bomberman;
         this.bomb = bomb;
 
+        walkable = false;
         species = BOMBERMAN_ON_BOMB;
     }
 

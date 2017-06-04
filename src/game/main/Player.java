@@ -168,7 +168,7 @@ public class Player
 
         bombsCount--;
         Bomb bomb = new Bomb(world, this,
-                new Position(position.getX()+1, position.getY()), bombBlastRadius);
+                new Position(position.getX(), position.getY()), bombBlastRadius);
         world.placeBomb(bomb);
     }
 }
