@@ -21,6 +21,8 @@ public class Flame implements Runnable
             this.existing = false;
         }catch(InterruptedException e){
         }
+
+        System.out.println("END");
         this.existing = false;
     }
 

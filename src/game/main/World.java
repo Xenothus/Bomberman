@@ -120,8 +120,8 @@ public class World
 
     public void placeBomb(Position pos, int blastRadius)
     {
-        if (!bombs.isEmpty())
-            return;
+//        if (!bombs.isEmpty())
+//            return;
 
         Bomb bomb = new Bomb(pos,this, blastRadius);
         try {
@@ -134,80 +134,111 @@ public class World
 
     public void explodeBomb(Position pos, int blastRadius)
     {
-        int[][] pattern = new int[3][3];
-        for(int i=0;i<3;i++){
-            for(int j=0;j<3;j++)pattern[i][j] = 0;
-        }
+        System.out.println("OK");
+        int[][] pattern = new int[4][blastRadius];
+        for (int i = 0; i < pattern.length; i++)
+            for (int k = 0; k < pattern[0].length; k++)
+                pattern[i][k] = 0;
 
-        Position bombPos = pos;
-        Position srodek = new Position(bombPos.getX(), bombPos.getY());
-        Position gora = new Position(bombPos.getX() , bombPos.getY()-1);
-        Position lewo = new Position(bombPos.getX() - 1, bombPos.getY() );
-        Position prawo = new Position(bombPos.getX() + 1, bombPos.getY());
-        Position dol = new Position(bombPos.getX() , bombPos.getY() + 1);
+        int x = pos.getX();
+        int y = pos.getY();
 
-        if (actualWorld[srodek.getX()][srodek.getY()] == null ||
-            actualWorld[srodek.getX()][srodek.getY()].isDestroyable())
+        //UP
+        Block currentBlock;
+        for (int i = 1; i <= blastRadius; i++)
         {
-            pattern[1][1] = 1;
-            if (actualWorld[srodek.getX()][srodek.getY()].isPlayer())
-                players.get(findPlayerIndexWithID(actualWorld[srodek.getX()][srodek.getY()].getPlayerID())).die();
+            if (y - i >= 0)
+            {
+                currentBlock = actualWorld[x][y - i];
 
-            actualWorld[srodek.getX()][srodek.getY()] = new Clear();
+                if (currentBlock == null || currentBlock.isDestroyable())
+                {
+                    pattern[UP][i - 1] = 1;
+                    if (currentBlock.isPlayer())
+                        players.get(findPlayerIndexWithID(currentBlock.getPlayerID())).die();
+
+
+                    actualWorld[x][y - i] = new Clear();
+                }
+                else break;
+            }
+            else break;
         }
 
-        if (gora.getY() >=0 &&
-                (actualWorld[gora.getX()][gora.getY()] == null ||
-                 actualWorld[gora.getX()][gora.getY()].isDestroyable()))
+        //LEFT
+        for (int i = 1; i <= blastRadius; i++)
         {
-            pattern[1][0] = 1;
-            if (actualWorld[gora.getX()][gora.getY()].isPlayer())
-                players.get(findPlayerIndexWithID(actualWorld[gora.getX()][gora.getY()].getPlayerID())).die();
+            if (x - i >= 0)
+            {
+                currentBlock = actualWorld[x - i][y];
 
-            actualWorld[gora.getX()][gora.getY()] = new Clear();
+                if (currentBlock == null || currentBlock.isDestroyable())
+                {
+                    pattern[LEFT][i - 1] = 1;
+                    if (currentBlock.isPlayer())
+                        players.get(findPlayerIndexWithID(currentBlock.getPlayerID())).die();
+
+                    actualWorld[x - i][y] = new Clear();
+                }
+                else break;
+            }
+            else break;
         }
 
-
-        if (lewo.getX() >=0 &&
-                (actualWorld[lewo.getX()][lewo.getY()] == null ||
-                 actualWorld[lewo.getX()][lewo.getY()].isDestroyable()))
+        //RIGHT
+        for (int i = 1; i <= blastRadius; i++)
         {
-            pattern[0][1] = 1;
-            if (actualWorld[lewo.getX()][lewo.getY()].isPlayer())
-                players.get(findPlayerIndexWithID(actualWorld[lewo.getX()][lewo.getY()].getPlayerID())).die();
+            if (x + i < COLS)
+            {
+                currentBlock = actualWorld[x + i][y];
 
-            actualWorld[lewo.getX()][lewo.getY()] = new Clear();
+                if (currentBlock == null || currentBlock.isDestroyable())
+                {
+                    pattern[RIGHT][i - 1] = 1;
+                    if (currentBlock.isPlayer())
+                        players.get(findPlayerIndexWithID(currentBlock.getPlayerID())).die();
+
+                    actualWorld[x + i][y] = new Clear();
+                }
+                else break;
+            }
+            else break;
         }
 
-
-        if (prawo.getX() >=0 &&
-                (actualWorld[prawo.getX()][prawo.getY()] == null ||
-                 actualWorld[prawo.getX()][prawo.getY()].isDestroyable()))
+        //DOWN
+        for (int i = 1; i <= blastRadius; i++)
         {
-            pattern[2][1] = 1;
-            if (actualWorld[prawo.getX()][prawo.getY()].isPlayer())
-                players.get(findPlayerIndexWithID(actualWorld[prawo.getX()][prawo.getY()].getPlayerID())).die();
+            if (y + i < ROWS)
+            {
+                currentBlock = actualWorld[x][y + i];
 
-            actualWorld[prawo.getX()][prawo.getY()] = new Clear();
+                if (currentBlock == null || currentBlock.isDestroyable())
+                {
+                    pattern[DOWN][i - 1] = 1;
+                    if (currentBlock.isPlayer())
+                        players.get(findPlayerIndexWithID(currentBlock.getPlayerID())).die();
+
+                    actualWorld[x][y + i] = new Clear();
+                }
+                else break;
+            }
+            else break;
         }
 
-
-        if (dol.getY() >=0 &&
-                (actualWorld[dol.getX()][dol.getY()] == null ||
-                 actualWorld[dol.getX()][dol.getY()].isDestroyable()))
+        for (int i = 0; i < 4; i++)
         {
-            pattern[1][2] = 1;
-            if (actualWorld[dol.getX()][dol.getY()].isPlayer())
-                players.get(findPlayerIndexWithID(actualWorld[dol.getX()][dol.getY()].getPlayerID())).die();
+            for (int k = 0; k < pattern[0].length; k++)
+            {
+                System.out.print(pattern[i][k] + "\t");
+            }
 
-            actualWorld[dol.getX()][dol.getY()] = new Clear();
+            System.out.print("\n");
         }
 
-
-        Flame flame = new Flame(srodek,this,pattern);
-        try {
+        Flame flame = new Flame(pos,this, pattern);
+/*        try {
             Thread.sleep(10);
-        }catch(InterruptedException e){}
+        }catch(InterruptedException e){}*/
         flames.add(flame);
         Thread newThread = new Thread(flame);
         newThread.start();
@@ -221,35 +252,84 @@ public class World
     public synchronized byte[][] getViewTable()
     {
         byte [][] viewModel = new byte[COLS][ROWS];
-        for(int i = 0; i< COLS;i++){
-            for(int j = 0; j< ROWS;j++){
+        for(int i = 0; i < COLS; i++)
+        {
+            for(int j = 0; j < ROWS; j++)
+            {
                 if(actualWorld[i][j] != null)
-                viewModel[i][j] = actualWorld[i][j].getSpecies();
+                    viewModel[i][j] = actualWorld[i][j].getSpecies();
             }
         }
-        for (Iterator<Bomb> it = bombs.iterator(); it.hasNext(); ) {
+
+        for (Iterator<Bomb> it = bombs.iterator(); it.hasNext();)
+        {
             Bomb bomb = it.next();
-            if (!bomb.isExisting()) {
+            if (!bomb.isExisting())
                 it.remove();
-            }else{
-                if (viewModel[bomb.getPosition().getX()][bomb.getPosition().getY()]==CLEAR)
+            else
+            {
+                if (viewModel[bomb.getPosition().getX()][bomb.getPosition().getY()] == CLEAR)
                     viewModel[bomb.getPosition().getX()][bomb.getPosition().getY()] = BOMB;
             }
         }
-        for (Iterator<Flame> it = flames.iterator(); it.hasNext(); ) {
-            Flame flame = it.next();
-            if(flame != null) {
-                if (!flame.isExisting()) {
-                    it.remove();
-                } else {
 
-                    for (int j = 0; j < 3; j++) {
-                        for (int k = 0; k < 3; k++) {
-                            if (flame.getPattern()[j][k] == 1)
-                                if(viewModel[flame.getPosition().getX() + j - 1][flame.getPosition().getY() + k - 1]==CLEAR)
-                                viewModel[flame.getPosition().getX() + j - 1][flame.getPosition().getY() + k - 1] = FLAME;
+        for (Iterator<Flame> it = flames.iterator(); it.hasNext();)
+        {
+            Flame flame = it.next();
+            if(flame != null)
+            {
+                if (!flame.isExisting())
+                    it.remove();
+                else
+                {
+                    int x = flame.getPosition().getX();
+                    int y = flame.getPosition().getY();
+
+                    viewModel[x][y] = FLAME;
+
+                    int[][] pattern = flame.getPattern();
+
+                    for (int j = 0; j < pattern.length; j++)            // direction
+                    {
+                        for (int k = 0; k < pattern[0].length; k++)     // each element
+                        {
+                            if (pattern[j][k] == 1)
+                            {
+                                switch (j)
+                                {
+                                    case UP:
+                                        viewModel[x][y - k - 1] = FLAME;
+                                        break;
+
+                                    case LEFT:
+                                        viewModel[x - k - 1][y] = FLAME;
+                                        break;
+
+                                    case RIGHT:
+                                        viewModel[x + k + 1][y] = FLAME;
+                                        break;
+
+                                    case DOWN:
+                                        viewModel[x][y + k + 1] = FLAME;
+                                        break;
+                                }
+                            }
                         }
                     }
+
+
+/*                    for (int g = 0; g < COLS; g++)
+                    {
+                        for (int b = 0; b < ROWS; b++)
+                        {
+                            System.out.print(viewModel[g][b]);
+                        }
+                        System.out.print("\n");
+                    }
+
+                    System.out.print("\n");
+                    System.out.print("\n");
+                    System.out.print("\n");*/
                 }
             }
         }

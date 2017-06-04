@@ -31,4 +31,9 @@ public class Config
     public final static byte MOVE_LEFT = 3;
     public final static byte MOVE_RIGHT = 4;
     public final static byte PLANT_BOMB = 5;
+
+    public final static byte UP = 0;
+    public final static byte DOWN = 1;
+    public final static byte LEFT = 2;
+    public final static byte RIGHT = 3;
 }

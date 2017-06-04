@@ -23,7 +23,7 @@ public class Player
         this.ID = ID;
         this.world = world;
         isAlive = true;
-        bombBlastRadius = 1;
+        bombBlastRadius = 2;
         position = PLAYERS_INITIAL_POSITIONS[ID];
         world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
         System.out.println("Player " + ID + " joined game");
