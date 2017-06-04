@@ -17,8 +17,6 @@ public class Bomb extends Block implements Runnable
     private Player player;
     private Position position;
     private int blastRadius;
-
-    private final int duration = 2000;
     private boolean existing = true;
 
     public Bomb(World world, Player player, Position position, int blastRadius)
@@ -38,7 +36,7 @@ public class Bomb extends Block implements Runnable
     public void run()
     {
         try {
-            Thread.sleep(duration);
+            Thread.sleep(BOMB_FIRING_DURATION);
         }catch(InterruptedException e){}
 
         explode();
@@ -50,7 +48,7 @@ public class Bomb extends Block implements Runnable
         {
             existing = false;
             world.explodeBomb(position, blastRadius);
-            player.myBombIsDetonated();
+            player.notifyBombDetonated();
         }
     }
 

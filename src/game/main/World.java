@@ -5,7 +5,7 @@ import game.blocks.Brick;
 import game.blocks.Clear;
 import game.blocks.Wood;
 import game.blocks.Bomb;
-import game.items.Flame;
+import game.effects.Flame;
 import game.auxiliary.Position;
 
 import java.util.ArrayList;
@@ -24,10 +24,8 @@ public class World
         private static final World instance = new World();
     }
 
-    List<Player> players;
-
     Block[][] actualWorld;
-    List<Bomb> bombs;
+    List<Player> players;
     List<Flame> flames;
 
     public synchronized static World getInstance()
@@ -37,11 +35,9 @@ public class World
 
     private World()
     {
-        players = new LinkedList<>();
-
-        this.bombs = new ArrayList<>();
-        this.flames = new ArrayList<>();
         this.actualWorld = new Block[COLS][ROWS];
+        this.players = new LinkedList<>();
+        this.flames = new ArrayList<>();
 
         byte[][] map = getDefaultWorldMap();
 
@@ -125,7 +121,6 @@ public class World
         }catch(InterruptedException e){}
 
         actualWorld[bomb.getPosition().getX()][bomb.getPosition().getY()] = bomb;
-        bombs.add(bomb);
 
         new Thread(bomb).start();
     }
@@ -261,27 +256,12 @@ public class World
             }
         }
 
-/*        for (Iterator<Bomb> it = bombs.iterator(); it.hasNext();)
-        {
-            Bomb bomb = it.next();
-            if (!bomb.isExisting())
-                it.remove();
-            else
-            {
-                if (viewModel[bomb.getPosition().getX()][bomb.getPosition().getY()] == CLEAR)
-                    viewModel[bomb.getPosition().getX()][bomb.getPosition().getY()] = BOMB;
-            }
-        }*/
-
-        for (Iterator<Flame> it = flames.iterator(); it.hasNext();)
-        {
+        for (Iterator<Flame> it = flames.iterator(); it.hasNext();) {
             Flame flame = it.next();
-            if(flame != null)
-            {
+            if (flame != null) {
                 if (!flame.isExisting())
                     it.remove();
-                else
-                {
+                else {
                     int x = flame.getPosition().getX();
                     int y = flame.getPosition().getY();
 
@@ -293,10 +273,8 @@ public class World
                     {
                         for (int k = 0; k < pattern[0].length; k++)     // each element
                         {
-                            if (pattern[j][k] == 1)
-                            {
-                                switch (j)
-                                {
+                            if (pattern[j][k] == 1) {
+                                switch (j) {
                                     case UP:
                                         viewModel[x][y - k - 1] = FLAME;
                                         break;
@@ -316,44 +294,9 @@ public class World
                             }
                         }
                     }
-
-
-/*                    for (int g = 0; g < COLS; g++)
-                    {
-                        for (int b = 0; b < ROWS; b++)
-                        {
-                            System.out.print(viewModel[g][b]);
-                        }
-                        System.out.print("\n");
-                    }
-
-                    System.out.print("\n");
-                    System.out.print("\n");
-                    System.out.print("\n");*/
                 }
             }
         }
-
-        //Petla ktora leci po wszystkich playerach
-/*        for (Player player : players)
-            viewModel[player.position.getX()][player.position.getY()] = BOMBERMAN;*/
-
-        //Zamiast tego bedzie wysylanie do klientow
-        //view.updateMap(viewModel);
-
-
-        //todelete
-/*        for (int i = 0; i < COLS; i++)
-        {
-            for (int k = 0; k < ROWS; k++)
-            {
-                System.out.print(viewModel[i][k]);
-            }
-            System.out.print("\n");
-        }
-
-        System.out.print("\n");
-        System.out.print("\n");*/
 
         return viewModel;
     }

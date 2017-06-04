@@ -26,6 +26,8 @@ public class Config
             new Position(COLS - 2, ROWS - 2),
     };
 
+    public final static int BOMB_FIRING_DURATION = 2000;
+
     public final static byte MOVE_UP = 1;
     public final static byte MOVE_DOWN = 2;
     public final static byte MOVE_LEFT = 3;

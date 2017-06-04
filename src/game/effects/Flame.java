@@ -1,4 +1,4 @@
-package game.items;
+package game.effects;
 
 import game.main.World;
 import game.auxiliary.Position;

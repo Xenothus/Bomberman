@@ -17,15 +17,20 @@ public class Player
 
     private World world;
     private boolean isAlive;
+
+    private int bombsCount;
     private int bombBlastRadius;
 
     public Player(World world, int ID)
     {
         this.ID = ID;
         this.world = world;
+
         isAlive = true;
-        bombBlastRadius = 2;
+        bombsCount = 1;
+        bombBlastRadius = 1;
         position = PLAYERS_INITIAL_POSITIONS[ID];
+
         world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
         System.out.println("Player " + ID + " joined game");
     }
@@ -36,16 +41,14 @@ public class Player
         System.out.println("Player " + ID + " died");
     }
 
-    void placeBomb()
+    public void notifyBombDetonated()
     {
-        Bomb bomb = new Bomb(world, this,
-            new Position(position.getX(), position.getY()), bombBlastRadius);
-        world.placeBomb(bomb);
+        bombsCount++;
     }
 
-    public void myBombIsDetonated()
+    public void addBomb()
     {
-        System.out.println("OK thanks!!!");
+        bombsCount++;
     }
 
     public void performAction(byte command)
@@ -114,5 +117,16 @@ public class Player
             System.out.println("OH MAH GAHD!!!");
         else
             world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
+    }
+
+    private void placeBomb()
+    {
+        if (bombsCount == 0)
+            return;
+
+        bombsCount--;
+        Bomb bomb = new Bomb(world, this,
+                new Position(position.getX(), position.getY()), bombBlastRadius);
+        world.placeBomb(bomb);
     }
 }
