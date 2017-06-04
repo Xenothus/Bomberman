@@ -1,14 +1,16 @@
-package game.items;
+package game.blocks;
 
 import game.main.World;
 import game.auxiliary.Position;
 
 import java.util.Date;
 
+import static game.main.Config.*;
+
 /**
  * Created by User on 04.04.2017.
  */
-public class Bomb implements Runnable
+public class Bomb extends Block implements Runnable
 {
     private Position position;
     World world;
@@ -23,6 +25,9 @@ public class Bomb implements Runnable
         duration = 2000;
         this.blastRadius = blastRadius;
         existing = true;
+
+        species = BOMB;
+        destroyable = true;
     }
 
     void explode()

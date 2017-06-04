@@ -4,7 +4,7 @@ import game.blocks.Block;
 import game.blocks.Brick;
 import game.blocks.Clear;
 import game.blocks.Wood;
-import game.items.Bomb;
+import game.blocks.Bomb;
 import game.items.Flame;
 import game.auxiliary.Position;
 

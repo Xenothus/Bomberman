@@ -53,36 +53,36 @@ public class Player
             case MOVE_UP:
                 if (x - 1 >= 0 && world.actualWorld[x][y - 1].isWalkable())
                 {
-                    world.actualWorld[position.getX()][position.getY()] = new Clear();
+                    moveOut();
                     position.setY(y - 1);
-                    world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
+                    moveIn();
                 }
                 break;
 
             case MOVE_LEFT:
                 if (x - 1 >= 0 && world.actualWorld[x - 1][y].isWalkable())
                 {
-                    world.actualWorld[position.getX()][position.getY()] = new Clear();
+                    moveOut();
                     position.setX(x - 1);
-                    world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
+                    moveIn();
                 }
                 break;
 
             case MOVE_DOWN:
                 if (y + 1 < ROWS && world.actualWorld[x][y + 1].isWalkable())
                 {
-                    world.actualWorld[position.getX()][position.getY()] = new Clear();
+                    moveOut();
                     position.setY(y + 1);
-                    world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
+                    moveIn();
                 }
                 break;
 
             case MOVE_RIGHT:
                 if (x + 1 < COLS && world.actualWorld[x + 1][y].isWalkable())
                 {
-                    world.actualWorld[position.getX()][position.getY()] = new Clear();
+                    moveOut();
                     position.setX(x + 1);
-                    world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
+                    moveIn();
                 }
                 break;
 
@@ -90,5 +90,15 @@ public class Player
                 placeBomb(x, y);
                 break;
         }
+    }
+
+    private void moveOut()
+    {
+        world.actualWorld[position.getX()][position.getY()] = new Clear();
+    }
+
+    private void moveIn()
+    {
+        world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
     }
 }
