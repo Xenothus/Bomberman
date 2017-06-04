@@ -54,6 +54,7 @@ public class World
             {
                 if (map[i][j] == WOOD) actualWorld[i][j] = new Wood();
                 if (map[i][j] == BRICK) actualWorld[i][j] = new Brick();
+                if (map[i][j] == WOOD_WITH_EXTRA_BOMB) actualWorld[i][j] = new WoodWithExtraBomb();
             }
         }
     }
@@ -70,6 +71,8 @@ public class World
         for(int i = 4; i < COLS - 1; i += 3)
             for (int j = 2; j < ROWS - 1; j += 3)
                 map[i][j] = BRICK;
+
+        map[2][2] = WOOD_WITH_EXTRA_BOMB;
 
         return map;
     }
@@ -161,8 +164,8 @@ public class World
                 if (currentBlock == null || currentBlock.isDestroyable())
                 {
                     pattern[UP][i - 1] = 1;
-                    checkBlock(currentBlock);
-                    actualWorld[x][y - i] = new Clear();
+                    if (checkBlock(currentBlock, x, y - i))
+                        actualWorld[x][y - i] = new Clear();
                 }
                 else break;
             }
@@ -179,8 +182,8 @@ public class World
                 if (currentBlock == null || currentBlock.isDestroyable())
                 {
                     pattern[LEFT][i - 1] = 1;
-                    checkBlock(currentBlock);
-                    actualWorld[x - i][y] = new Clear();
+                    if (checkBlock(currentBlock, x - i, y))
+                        actualWorld[x - i][y] = new Clear();
                 }
                 else break;
             }
@@ -197,8 +200,8 @@ public class World
                 if (currentBlock == null || currentBlock.isDestroyable())
                 {
                     pattern[RIGHT][i - 1] = 1;
-                    checkBlock(currentBlock);
-                    actualWorld[x + i][y] = new Clear();
+                    if (checkBlock(currentBlock, x + i, y))
+                        actualWorld[x + i][y] = new Clear();
                 }
                 else break;
             }
@@ -215,8 +218,8 @@ public class World
                 if (currentBlock == null || currentBlock.isDestroyable())
                 {
                     pattern[DOWN][i - 1] = 1;
-                    checkBlock(currentBlock);
-                    actualWorld[x][y + i] = new Clear();
+                    if (checkBlock(currentBlock, x, y + i))
+                        actualWorld[x][y + i] = new Clear();
                 }
                 else break;
             }
@@ -235,12 +238,24 @@ public class World
         new Thread(flame).start();
     }
 
-    private void checkBlock(Block block)
+    private boolean checkBlock(Block block, int x, int y)
     {
-        if (block.getSpecies() == BOMBERMAN)
-            players.get(findPlayerIndexWithID(block.getPlayerID())).die();
-        else if (block.getSpecies() == BOMB)
-            ((Bomb) block).explode();
+        switch (block.getSpecies())
+        {
+            case BOMBERMAN:
+                players.get(findPlayerIndexWithID(block.getPlayerID())).die();
+                break;
+
+            case BOMB:
+                ((Bomb) block).explode();
+                break;
+
+            case WOOD_WITH_EXTRA_BOMB:
+                actualWorld[x][y] = new ExtraBomb();
+                return false;
+        }
+
+        return true;
     }
 
     public void stopFlame(Flame flame)
@@ -260,9 +275,11 @@ public class World
             }
         }
 
-        for (Iterator<Flame> it = flames.iterator(); it.hasNext();) {
+        for (Iterator<Flame> it = flames.iterator(); it.hasNext();)
+        {
             Flame flame = it.next();
-            if (flame != null) {
+            if (flame != null)
+            {
                 if (!flame.isExisting())
                     it.remove();
                 else

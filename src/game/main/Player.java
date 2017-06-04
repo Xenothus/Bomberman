@@ -77,6 +77,11 @@ public class Player
                         getOutOfBomb(position, destination);
                     else if (world.actualWorld[x][y - 1].getSpecies() == BOMB)
                         standOnBomb(position, destination);
+                    else if (world.actualWorld[x][y - 1].getSpecies() == EXTRA_BOMB)
+                    {
+                        addBomb();
+                        simpleMove(position, destination);
+                    }
                     else
                         simpleMove(position, destination);
                 }
