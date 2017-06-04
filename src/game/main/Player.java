@@ -62,112 +62,38 @@ public class Player
         if (!isAlive)
             return;
 
+        if (command == PLANT_BOMB)
+        {
+            placeBomb();
+            return;
+        }
+
         int x = position.getX();
         int y = position.getY();
 
-        Position destination;
+        int xStep = POSITIONS[command][X];
+        int yStep = POSITIONS[command][Y];
 
-        switch(command)
+        if (x + xStep < 0 || x + xStep >= COLS ||
+            y + yStep < 0 || y + yStep >= ROWS)
+            return;
+
+        if (world.actualWorld[x + xStep][y + yStep].isWalkable())
         {
-            case MOVE_UP:
-                if (x - 1 >= 0 && world.actualWorld[x][y - 1].isWalkable())
-                {
-                    destination = new Position(x, y - 1);
+            Position destination = new Position(x + xStep, y + yStep);
 
-                    if (world.actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
-                        getOutOfBomb(position, destination);
-                    else if (world.actualWorld[x][y - 1].getSpecies() == BOMB)
-                        standOnBomb(position, destination);
-                    else if (world.actualWorld[x][y - 1].getSpecies() == EXTRA_BOMB)
-                    {
-                        addBomb();
-                        simpleMove(position, destination);
-                    }
-                    else if (world.actualWorld[x][y - 1].getSpecies() == EXTRA_GUNPOWDER)
-                    {
-                        addBlastRadius();
-                        simpleMove(position, destination);
-                    }
-                    else
-                        simpleMove(position, destination);
-                }
-                break;
-
-            case MOVE_LEFT:
-                if (x - 1 >= 0 && world.actualWorld[x - 1][y].isWalkable())
-                {
-                    destination = new Position(x - 1, y);
-
-                    if (world.actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
-                        getOutOfBomb(position, destination);
-                    else if (world.actualWorld[x - 1][y].getSpecies() == BOMB)
-                        standOnBomb(position, destination);
-                    else if (world.actualWorld[x - 1][y].getSpecies() == EXTRA_BOMB)
-                    {
-                        addBomb();
-                        simpleMove(position, destination);
-                    }
-                    else if (world.actualWorld[x - 1][y].getSpecies() == EXTRA_GUNPOWDER)
-                    {
-                        addBlastRadius();
-                        simpleMove(position, destination);
-                    }
-                    else
-                        simpleMove(position, destination);
-                }
-                break;
-
-            case MOVE_DOWN:
-                if (y + 1 < ROWS && world.actualWorld[x][y + 1].isWalkable())
-                {
-                    destination = new Position(x, y + 1);
-
-                    if (world.actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
-                        getOutOfBomb(position, destination);
-                    else if (world.actualWorld[x][y + 1].getSpecies() == BOMB)
-                        standOnBomb(position, destination);
-                    else if (world.actualWorld[x][y + 1].getSpecies() == EXTRA_BOMB)
-                    {
-                        addBomb();
-                        simpleMove(position, destination);
-                    }
-                    else if (world.actualWorld[x][y + 1].getSpecies() == EXTRA_GUNPOWDER)
-                    {
-                        addBlastRadius();
-                        simpleMove(position, destination);
-                    }
-                    else
-                        simpleMove(position, destination);
-                }
-                break;
-
-            case MOVE_RIGHT:
-                if (x + 1 < COLS && world.actualWorld[x + 1][y].isWalkable())
-                {
-                    destination = new Position(x + 1, y);
-
-                    if (world.actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
-                        getOutOfBomb(position, destination);
-                    else if (world.actualWorld[x + 1][y].getSpecies() == BOMB)
-                        standOnBomb(position, destination);
-                    else if (world.actualWorld[x + 1][y].getSpecies() == EXTRA_BOMB)
-                    {
-                        addBomb();
-                        simpleMove(position, destination);
-                    }
-                    else if (world.actualWorld[x + 1][y].getSpecies() == EXTRA_GUNPOWDER)
-                    {
-                        addBlastRadius();
-                        simpleMove(position, destination);
-                    }
-                    else
-                        simpleMove(position, destination);
-                }
-                break;
-
-            case PLANT_BOMB:
-                placeBomb();
-                break;
+            if (world.actualWorld[x][y].getSpecies() == BOMBERMAN_ON_BOMB)
+                getOutOfBomb(position, destination);
+            else if (world.actualWorld[x + xStep][y + yStep].getSpecies() == BOMB)
+                standOnBomb(position, destination);
+            else if (world.actualWorld[x + xStep][y + yStep].getSpecies() == EXTRA_BOMB) {
+                addBomb();
+                simpleMove(position, destination);
+            } else if (world.actualWorld[x + xStep][y + yStep].getSpecies() == EXTRA_GUNPOWDER) {
+                addBlastRadius();
+                simpleMove(position, destination);
+            } else
+                simpleMove(position, destination);
         }
     }
 
