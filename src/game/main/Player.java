@@ -22,8 +22,6 @@ public class Player
     private int bombsCount;
     private int bombBlastRadius;
 
-    private Position prevPosition;
-
     public Player(World world, int ID)
     {
         this.ID = ID;
@@ -54,6 +52,11 @@ public class Player
         bombsCount++;
     }
 
+    public void addBlastRadius()
+    {
+        bombBlastRadius++;
+    }
+
     public void performAction(byte command)
     {
         if (!isAlive)
@@ -61,8 +64,6 @@ public class Player
 
         int x = position.getX();
         int y = position.getY();
-
-        prevPosition = new Position(position.getX(), position.getY());
 
         Position destination;
 
@@ -82,6 +83,11 @@ public class Player
                         addBomb();
                         simpleMove(position, destination);
                     }
+                    else if (world.actualWorld[x][y - 1].getSpecies() == EXTRA_GUNPOWDER)
+                    {
+                        addBlastRadius();
+                        simpleMove(position, destination);
+                    }
                     else
                         simpleMove(position, destination);
                 }
@@ -96,6 +102,16 @@ public class Player
                         getOutOfBomb(position, destination);
                     else if (world.actualWorld[x - 1][y].getSpecies() == BOMB)
                         standOnBomb(position, destination);
+                    else if (world.actualWorld[x - 1][y].getSpecies() == EXTRA_BOMB)
+                    {
+                        addBomb();
+                        simpleMove(position, destination);
+                    }
+                    else if (world.actualWorld[x - 1][y].getSpecies() == EXTRA_GUNPOWDER)
+                    {
+                        addBlastRadius();
+                        simpleMove(position, destination);
+                    }
                     else
                         simpleMove(position, destination);
                 }
@@ -110,6 +126,16 @@ public class Player
                         getOutOfBomb(position, destination);
                     else if (world.actualWorld[x][y + 1].getSpecies() == BOMB)
                         standOnBomb(position, destination);
+                    else if (world.actualWorld[x][y + 1].getSpecies() == EXTRA_BOMB)
+                    {
+                        addBomb();
+                        simpleMove(position, destination);
+                    }
+                    else if (world.actualWorld[x][y + 1].getSpecies() == EXTRA_GUNPOWDER)
+                    {
+                        addBlastRadius();
+                        simpleMove(position, destination);
+                    }
                     else
                         simpleMove(position, destination);
                 }
@@ -124,6 +150,16 @@ public class Player
                         getOutOfBomb(position, destination);
                     else if (world.actualWorld[x + 1][y].getSpecies() == BOMB)
                         standOnBomb(position, destination);
+                    else if (world.actualWorld[x + 1][y].getSpecies() == EXTRA_BOMB)
+                    {
+                        addBomb();
+                        simpleMove(position, destination);
+                    }
+                    else if (world.actualWorld[x + 1][y].getSpecies() == EXTRA_GUNPOWDER)
+                    {
+                        addBlastRadius();
+                        simpleMove(position, destination);
+                    }
                     else
                         simpleMove(position, destination);
                 }

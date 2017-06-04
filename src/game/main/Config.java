@@ -12,7 +12,7 @@ public class Config
     public final static int COLS = 20;
     public final static int ROWS = 15;
 
-    public final static int BLOCKS_TYPE_COUNT = 8;
+    public final static int BLOCKS_TYPE_COUNT = 11;
 
     public final static byte CLEAR = 0;
     public final static byte BOMB = 1;
@@ -23,6 +23,8 @@ public class Config
     public final static byte BOMBERMAN_ON_BOMB = 6;
     public final static byte EXTRA_BOMB = 7;
     public final static byte WOOD_WITH_EXTRA_BOMB = 8;
+    public final static byte EXTRA_GUNPOWDER = 9;
+    public final static byte WOOD_WITH_EXTRA_GUNPOWDER = 10;
 
     public final static Position[] PLAYERS_INITIAL_POSITIONS = {
             new Position(1, 1),

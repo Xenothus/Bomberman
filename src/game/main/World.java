@@ -52,9 +52,14 @@ public class World
         {
             for (int j = 0; j < ROWS; j++)
             {
-                if (map[i][j] == WOOD) actualWorld[i][j] = new Wood();
-                if (map[i][j] == BRICK) actualWorld[i][j] = new Brick();
-                if (map[i][j] == WOOD_WITH_EXTRA_BOMB) actualWorld[i][j] = new WoodWithExtraBomb();
+                if (map[i][j] == WOOD)
+                    actualWorld[i][j] = new Wood();
+                if (map[i][j] == BRICK)
+                    actualWorld[i][j] = new Brick();
+                if (map[i][j] == WOOD_WITH_EXTRA_BOMB)
+                    actualWorld[i][j] = new WoodWithExtraBomb();
+                if (map[i][j] == WOOD_WITH_EXTRA_GUNPOWDER)
+                    actualWorld[i][j] = new WoodWithExtraGunpowder();
             }
         }
     }
@@ -73,6 +78,7 @@ public class World
                 map[i][j] = BRICK;
 
         map[2][2] = WOOD_WITH_EXTRA_BOMB;
+        map[3][2] = WOOD_WITH_EXTRA_GUNPOWDER;
 
         return map;
     }
@@ -252,6 +258,10 @@ public class World
 
             case WOOD_WITH_EXTRA_BOMB:
                 actualWorld[x][y] = new ExtraBomb();
+                return false;
+
+            case WOOD_WITH_EXTRA_GUNPOWDER:
+                actualWorld[x][y] = new ExtraGunpowder();
                 return false;
         }
 
