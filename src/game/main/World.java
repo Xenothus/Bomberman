@@ -152,10 +152,7 @@ public class World
                 if (currentBlock == null || currentBlock.isDestroyable())
                 {
                     pattern[UP][i - 1] = 1;
-                    if (currentBlock.isPlayer())
-                        players.get(findPlayerIndexWithID(currentBlock.getPlayerID())).die();
-
-
+                    checkBlock(currentBlock);
                     actualWorld[x][y - i] = new Clear();
                 }
                 else break;
@@ -173,9 +170,7 @@ public class World
                 if (currentBlock == null || currentBlock.isDestroyable())
                 {
                     pattern[LEFT][i - 1] = 1;
-                    if (currentBlock.isPlayer())
-                        players.get(findPlayerIndexWithID(currentBlock.getPlayerID())).die();
-
+                    checkBlock(currentBlock);
                     actualWorld[x - i][y] = new Clear();
                 }
                 else break;
@@ -193,9 +188,7 @@ public class World
                 if (currentBlock == null || currentBlock.isDestroyable())
                 {
                     pattern[RIGHT][i - 1] = 1;
-                    if (currentBlock.isPlayer())
-                        players.get(findPlayerIndexWithID(currentBlock.getPlayerID())).die();
-
+                    checkBlock(currentBlock);
                     actualWorld[x + i][y] = new Clear();
                 }
                 else break;
@@ -213,9 +206,7 @@ public class World
                 if (currentBlock == null || currentBlock.isDestroyable())
                 {
                     pattern[DOWN][i - 1] = 1;
-                    if (currentBlock.isPlayer())
-                        players.get(findPlayerIndexWithID(currentBlock.getPlayerID())).die();
-
+                    checkBlock(currentBlock);
                     actualWorld[x][y + i] = new Clear();
                 }
                 else break;
@@ -247,7 +238,10 @@ public class World
 
     private void checkBlock(Block block)
     {
-
+        if (block.getSpecies() == BOMBERMAN)
+            players.get(findPlayerIndexWithID(block.getPlayerID())).die();
+        else if (block.getSpecies() == BOMB)
+            ((Bomb) block).explode();
     }
 
     public void stopFlame(Flame flame)

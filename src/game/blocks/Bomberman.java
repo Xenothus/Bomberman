@@ -12,7 +12,6 @@ public class Bomberman extends Block
     public Bomberman(int playerID)
     {
         this.playerID = playerID;
-        player = true;
 
         walkable = false;
         species = BOMBERMAN;

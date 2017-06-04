@@ -8,8 +8,6 @@ public abstract class Block
     protected byte species;
     protected boolean destroyable;
     protected boolean walkable;
-    protected boolean player = false;
-    protected boolean bomb = false;
 
     public boolean isDestroyable()
     {
@@ -29,15 +27,5 @@ public abstract class Block
     public boolean isWalkable()
     {
         return walkable;
-    }
-
-    public boolean isPlayer()
-    {
-        return player;
-    }
-
-    public boolean isBomb()
-    {
-        return bomb;
     }
 }

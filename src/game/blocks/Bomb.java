@@ -44,7 +44,7 @@ public class Bomb extends Block implements Runnable
         explode();
     }
 
-    void explode()
+    public void explode()
     {
         if (existing)
         {
@@ -57,10 +57,5 @@ public class Bomb extends Block implements Runnable
     public Position getPosition()
     {
         return position;
-    }
-
-    public boolean isExisting()
-    {
-        return existing;
     }
 }
