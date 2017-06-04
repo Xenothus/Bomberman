@@ -42,6 +42,9 @@ public class Player
 
     public void performAction(byte command)
     {
+        if (!isAlive)
+            return;
+
         int x = position.getX();
         int y = position.getY();
 

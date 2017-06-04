@@ -89,24 +89,11 @@ public class World
 
     public synchronized void executeCommand(int ID, byte command)
     {
-        int i;
-        boolean found = false;
-        for (i = 0; i < players.size(); i++)
-        {
-            if (players.get(i).ID == ID)
-            {
-                found = true;
-                break;
-            }
-        }
-
-        if (!found)
-        {
-            System.err.println("Could not find player");
+        int index = findPlayerIndexWithID(ID);
+        if (index == -1)
             return;
-        }
 
-        players.get(i).performAction(command);
+        players.get(index).performAction(command);
     }
 
     private int findPlayerIndexWithID(int ID)
@@ -159,9 +146,8 @@ public class World
         Position prawo = new Position(bombPos.getX() + 1, bombPos.getY());
         Position dol = new Position(bombPos.getX() , bombPos.getY() + 1);
 
-        if (srodek.getY() >=0 &&
-                (actualWorld[srodek.getX()][srodek.getY()] == null ||
-                        actualWorld[srodek.getX()][srodek.getY()].isDestroyable()))
+        if (actualWorld[srodek.getX()][srodek.getY()] == null ||
+            actualWorld[srodek.getX()][srodek.getY()].isDestroyable())
         {
             pattern[1][1] = 1;
             if (actualWorld[srodek.getX()][srodek.getY()].isPlayer())
@@ -169,7 +155,6 @@ public class World
 
             actualWorld[srodek.getX()][srodek.getY()] = new Clear();
         }
-
 
         if (gora.getY() >=0 &&
                 (actualWorld[gora.getX()][gora.getY()] == null ||
@@ -183,7 +168,7 @@ public class World
         }
 
 
-        if (lewo.getY() >=0 &&
+        if (lewo.getX() >=0 &&
                 (actualWorld[lewo.getX()][lewo.getY()] == null ||
                  actualWorld[lewo.getX()][lewo.getY()].isDestroyable()))
         {
@@ -195,7 +180,7 @@ public class World
         }
 
 
-        if (prawo.getY() >=0 &&
+        if (prawo.getX() >=0 &&
                 (actualWorld[prawo.getX()][prawo.getY()] == null ||
                  actualWorld[prawo.getX()][prawo.getY()].isDestroyable()))
         {
