@@ -118,12 +118,12 @@ public class World
         return i;
     }
 
-    public void placeBomb(Position pos)
+    public void placeBomb(Position pos, int blastRadius)
     {
         if (!bombs.isEmpty())
             return;
 
-        Bomb bomb = new Bomb(pos,this);
+        Bomb bomb = new Bomb(pos,this, blastRadius);
         try {
             Thread.sleep(10);
         }catch(InterruptedException e){}
@@ -132,7 +132,7 @@ public class World
         newThread.start();
     }
 
-    public void explodeBomb(Position pos)
+    public void explodeBomb(Position pos, int blastRadius)
     {
         int[][] pattern = new int[3][3];
         for(int i=0;i<3;i++){

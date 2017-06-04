@@ -11,28 +11,28 @@ import java.util.Date;
 public class Bomb implements Runnable
 {
     private Position position;
-    private int timer;
     World world;
+    private int duration;
+    private int blastRadius;
     private boolean existing;
 
-    public Bomb(Position where, World world)
+    public Bomb(Position where, World world, int blastRadius)
     {
-        existing = true;
         position = where;
         this.world = world;
+        duration = 2000;
+        this.blastRadius = blastRadius;
+        existing = true;
     }
 
     void explode()
     {
-        Date time = new Date();
-        int timer = 2000;
         try {
-            Thread.sleep(2000);
-        }catch(InterruptedException e){
+            Thread.sleep(duration);
+        }catch(InterruptedException e){}
 
-        }
         existing = false;
-        world.explodeBomb(position);
+        world.explodeBomb(position, blastRadius);
     }
 
     @Override

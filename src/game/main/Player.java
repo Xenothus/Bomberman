@@ -16,14 +16,14 @@ public class Player
 
     private World world;
     private boolean isAlive;
-    private char action;
+    private int bombBlastRadius;
 
     public Player(World world, int ID)
     {
         this.ID = ID;
         this.world = world;
         isAlive = true;
-        action = 0;
+        bombBlastRadius = 1;
         position = PLAYERS_INITIAL_POSITIONS[ID];
         world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
         System.out.println("Player " + ID + " joined game");
@@ -37,7 +37,7 @@ public class Player
 
     void placeBomb(int x, int y)
     {
-        world.placeBomb(new Position(x, y));
+        world.placeBomb(new Position(x, y), bombBlastRadius);
     }
 
     public void performAction(byte command)
