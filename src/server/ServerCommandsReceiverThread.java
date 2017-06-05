@@ -34,7 +34,7 @@ public class ServerCommandsReceiverThread implements Runnable {
 
         try (DatagramSocket socket = new DatagramSocket(portUDP))
         {
-            InetAddress ip = InetAddress.getByName(DEFAULT_SERVER_IP);
+            //InetAddress ip = InetAddress.getByName(DEFAULT_SERVER_IP);
             byte[] buffer = new byte[BUFFER_SIZE_UDP];
 
             while (clientsInfo.isConnected(clientID))
