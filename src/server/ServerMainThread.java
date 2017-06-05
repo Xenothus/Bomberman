@@ -12,14 +12,12 @@ public class ServerMainThread implements Runnable
 {
     private final ExecutorService executor = Executors.newFixedThreadPool(CLIENTS_MAX_NUM);
     private int nextPortUDP;
-    private int nextClientID;
-    private int clientsCount;
+
+    private final ClientsInfo clientsInfo = ClientsInfo.getInstance();
 
     public ServerMainThread()
     {
         nextPortUDP = INITIAL_UDP_PORT;
-        nextClientID = 0;
-        clientsCount = 0;
     }
 
     @Override
@@ -32,14 +30,14 @@ public class ServerMainThread implements Runnable
 
             while (true)
             {
-                if (clientsCount > CLIENTS_MAX_NUM)
+                if (clientsInfo.getClientsCount() == CLIENTS_MAX_NUM)
                     continue;
 
                 final Socket socket = serverSocket.accept();
                 if (socket != null)
                 {
-                    executor.submit(new ServerCommandsReceiverThread(socket, getNextPortUDP(), getNextClientID()));
-                    clientsCount++;
+                    executor.submit(new ServerCommandsReceiverThread(socket, getNextPortUDP()));
+                    clientsInfo.incrementClientsCount();
                 }
             }
         }
@@ -53,10 +51,5 @@ public class ServerMainThread implements Runnable
     {
         nextPortUDP += 2;
         return nextPortUDP;
-    }
-
-    private int getNextClientID()
-    {
-        return nextClientID++;
     }
 }

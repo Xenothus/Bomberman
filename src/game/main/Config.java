@@ -9,6 +9,8 @@ public class Config
 {
     private Config(){}
 
+    public final static int MAX_PLAYERS_COUNT = 4;
+
     public final static int COLS = 20;
     public final static int ROWS = 15;
 

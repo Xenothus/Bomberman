@@ -12,4 +12,6 @@ public class Config
     final static int CLIENTS_MAX_NUM = 4;
     final static int INITIAL_UDP_PORT = 8000;
     final static int BUFFER_SIZE_UDP = 1024;
+
+    final static String PLAYER_TAKEN_MSG = "PN";
 }

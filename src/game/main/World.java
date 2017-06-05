@@ -24,6 +24,8 @@ public class World
     List<Player> players;
     List<Flame> flames;
 
+    private boolean[] playerCharacterAvailability;
+
     public synchronized static World getInstance()
     {
         return SingletonHelper.instance;
@@ -34,6 +36,10 @@ public class World
         this.actualWorld = new Block[COLS][ROWS];
         this.players = new LinkedList<>();
         this.flames = new ArrayList<>();
+
+        playerCharacterAvailability = new boolean[MAX_PLAYERS_COUNT];
+        for (int i = 0; i < MAX_PLAYERS_COUNT; i++)
+            playerCharacterAvailability[i] = true;
 
         byte[][] map = getDefaultWorldMap();
 
@@ -81,6 +87,15 @@ public class World
         map[3][2] = WOOD_WITH_EXTRA_GUNPOWDER;
 
         return map;
+    }
+
+    public boolean takePlayerCharacter(int ID)
+    {
+        if (!playerCharacterAvailability[ID])
+            return false;
+
+        playerCharacterAvailability[ID] = false;
+        return true;
     }
 
     public synchronized void addNewPlayer(int ID)
