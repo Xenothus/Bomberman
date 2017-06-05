@@ -31,7 +31,7 @@ public class World
 
 
 
-    // Player methods
+    // PLAYER METHODS
     public synchronized void joinPlayerWithID(int ID)
     {
         players[ID] = new Player(this, ID);
@@ -67,7 +67,7 @@ public class World
 
 
 
-    // Bomb methods
+    // BOMB METHODS
     public synchronized void placeBomb(Bomb bomb)
     {
         int x = bomb.getPosition().getX();
@@ -161,7 +161,7 @@ public class World
 
 
 
-    // View getter
+    // VIEW GETTER
     public synchronized byte[][] getViewModel()
     {
         byte [][] viewModel = new byte[COLS][ROWS];
@@ -179,7 +179,7 @@ public class World
 
 
 
-    // Private methods
+    // PRIVATE METHODS
     private byte[][] getDefaultWorldMap()
     {
         byte[][] map = new byte[COLS][ROWS];
