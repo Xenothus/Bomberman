@@ -33,7 +33,6 @@ public class Player
         position = PLAYERS_INITIAL_POSITIONS[ID];
 
         world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
-        System.out.println("Player " + ID + " joined game");
     }
 
     public void die()

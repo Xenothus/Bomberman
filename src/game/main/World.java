@@ -87,6 +87,29 @@ public class World
     public synchronized void joinPlayerWithID(int ID)
     {
         players[ID] = new Player(this, ID);
+        System.out.println("Player " + PLAYER_NAMES[ID] + " joined game");
+    }
+
+    public synchronized void quitPlayerWithID(int ID)
+    {
+        Player player = players[ID];
+        Block block = actualWorld[players[ID].position.getX()][players[ID].position.getY()];
+
+        boolean bombermanDelete = false;
+        if (block.isPlayer())
+            if (((Bomberman)block).getPlayerID() == player.ID)
+                bombermanDelete = true;
+        else if (block.isPlayerOnBomb())
+            if (((BombermanOnBomb)block).getBomberman().getPlayerID() == player.ID)
+                bombermanDelete = true;
+
+        if (bombermanDelete)
+        {
+            actualWorld[players[ID].position.getX()][players[ID].position.getY()] = new Clear();
+            players[ID] = null;
+        }
+
+        System.out.println("Player " + PLAYER_NAMES[ID] + " left game");
     }
 
     public synchronized void executePlayerCommand(int ID, byte command)

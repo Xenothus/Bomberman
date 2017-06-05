@@ -14,4 +14,6 @@ public class Config
     final static int BUFFER_SIZE_UDP = 1024;
 
     final static String PLAYER_TAKEN_MSG = "PN";
+
+    static byte DISCONNECT_COMMAND = (byte) 255;
 }

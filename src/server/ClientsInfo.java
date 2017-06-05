@@ -1,5 +1,7 @@
 package server;
 
+import game.main.World;
+
 import static server.Config.*;
 
 class ClientsInfo
@@ -35,6 +37,7 @@ class ClientsInfo
                 return false;
 
             isConnected[ID] = true;
+            World.getInstance().joinPlayerWithID(ID);
             return true;
         }
     }
@@ -47,6 +50,7 @@ class ClientsInfo
                 return false;
 
             isConnected[ID] = false;
+            World.getInstance().quitPlayerWithID(ID);
             return true;
         }
     }

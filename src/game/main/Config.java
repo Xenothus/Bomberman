@@ -57,4 +57,11 @@ public class Config
             {-1, 0},
             {1, 0}
     };
+
+    public final static String[] PLAYER_NAMES = {
+            "Kasia",
+            "Lukasz",
+            "Andrzej",
+            "Patryk"
+    };
 }

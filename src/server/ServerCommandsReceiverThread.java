@@ -46,6 +46,12 @@ public class ServerCommandsReceiverThread implements Runnable {
                 socket.receive(dp);
                 byte command = buffer[0];
 
+                if (command == DISCONNECT_COMMAND)
+                {
+                    clientsInfo.releasePlayerSlot(clientID);
+                    continue;
+                }
+
                 world.executePlayerCommand(clientID, command);
             }
         }
@@ -53,6 +59,8 @@ public class ServerCommandsReceiverThread implements Runnable {
         {
             e.printStackTrace();
         }
+
+        clientsInfo.decrementClientsCount();
     }
 
     private boolean connectWithClient()
@@ -87,10 +95,7 @@ public class ServerCommandsReceiverThread implements Runnable {
             if (!result)
                 throw new Exception();
 
-            //If success add player to world
-            System.out.println("Client connected: " + clientIPString);
             clientID = selectedPlayer;
-            World.getInstance().joinPlayerWithID(clientID);
         }
         catch (IOException e)
         {
