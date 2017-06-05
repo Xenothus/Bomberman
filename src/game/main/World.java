@@ -141,7 +141,7 @@ public class World
         int y = pos.getY();
 
         //MID
-        Flame flame = new Flame(this, new Position(x, y));
+        Flame flame = new Flame(new Position(x, y));
 
         if (actualWorld[x][y].isPlayerOnBomb())
             players[((BombermanOnBomb) actualWorld[x][y]).getBomberman().getPlayerID()].die();
@@ -165,7 +165,7 @@ public class World
                     break;
 
                 currentBlock = actualWorld[Xi][Yi];
-                flame = new Flame(this, new Position(Xi, Yi));
+                flame = new Flame(new Position(Xi, Yi));
 
                 if (currentBlock == null || currentBlock.isDestroyable())
                 {

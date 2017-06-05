@@ -7,11 +7,8 @@ import static game.main.Config.FLAME;
 
 public class Flame extends Block
 {
-    private World world;
-
-    public Flame(World world, Position position)
+    public Flame(Position position)
     {
-        this.world = world;
         this.position = position;
 
         species = FLAME;
