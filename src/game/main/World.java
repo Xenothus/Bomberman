@@ -2,17 +2,9 @@ package game.main;
 
 import game.blocks.*;
 import game.effects.Blast;
-import game.blocks.Flame;
 import game.auxiliary.Position;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import static game.main.Config.*;
 
-/**
- * Created by User on 04.04.2017.
- */
 public class World
 {
     private static class SingletonHelper {
@@ -20,8 +12,7 @@ public class World
     }
 
     public Block[][] actualWorld;
-    Player[] players = new Player[MAX_PLAYERS_COUNT];
-    List<Flame> flames;
+    private Player[] players;
 
     public synchronized static World getInstance()
     {
@@ -31,58 +22,16 @@ public class World
     private World()
     {
         this.actualWorld = new Block[COLS][ROWS];
+        this.players = new Player[MAX_PLAYERS_COUNT];
         for (int i = 0; i < MAX_PLAYERS_COUNT; i++)
             players[i] = null;
-        this.flames = new ArrayList<>();
 
-        byte[][] map = getDefaultWorldMap();
-
-        for(int i = 0; i < COLS; i++)
-        {
-            for(int j = 0; j < ROWS; j++)
-            {
-                if (i == 0 || i == COLS - 1 || j == 0 || j == ROWS - 1)
-                    actualWorld[i][j] = new Brick();
-                else
-                    actualWorld[i][j] = new Clear();
-            }
-        }
-
-        for(int i = 0; i < COLS; i++)
-        {
-            for (int j = 0; j < ROWS; j++)
-            {
-                if (map[i][j] == WOOD)
-                    actualWorld[i][j] = new Wood();
-                if (map[i][j] == BRICK)
-                    actualWorld[i][j] = new Brick();
-                if (map[i][j] == WOOD_WITH_EXTRA_BOMB)
-                    actualWorld[i][j] = new WoodWithExtraBomb();
-                if (map[i][j] == WOOD_WITH_EXTRA_GUNPOWDER)
-                    actualWorld[i][j] = new WoodWithExtraGunpowder();
-            }
-        }
+        setActualWorld(getDefaultWorldMap());
     }
 
-    private byte[][] getDefaultWorldMap()
-    {
-        byte[][] map = new byte[COLS][ROWS];
-        for(int i = 2; i < COLS - 1; i += 3)
-            for (int j = 2; j < ROWS - 1; j += 3)
-                map[i][j] = WOOD;
-        for(int i = 3; i < COLS - 1; i += 3)
-            for (int j = 2; j < ROWS - 1; j += 6)
-                map[i][j] = WOOD;
-        for(int i = 4; i < COLS - 1; i += 3)
-            for (int j = 2; j < ROWS - 1; j += 3)
-                map[i][j] = BRICK;
 
-        map[2][2] = WOOD_WITH_EXTRA_BOMB;
-        map[3][2] = WOOD_WITH_EXTRA_GUNPOWDER;
 
-        return map;
-    }
-
+    // Player methods
     public synchronized void joinPlayerWithID(int ID)
     {
         players[ID] = new Player(this, ID);
@@ -116,6 +65,9 @@ public class World
         players[ID].performAction(command);
     }
 
+
+
+    // Bomb methods
     public synchronized void placeBomb(Bomb bomb)
     {
         int x = bomb.getPosition().getX();
@@ -207,6 +159,9 @@ public class World
         new Thread(blast).start();
     }
 
+
+
+    // View getter
     public synchronized byte[][] getViewModel()
     {
         byte [][] viewModel = new byte[COLS][ROWS];
@@ -220,5 +175,58 @@ public class World
         }
 
         return viewModel;
+    }
+
+
+
+    // Private methods
+    private byte[][] getDefaultWorldMap()
+    {
+        byte[][] map = new byte[COLS][ROWS];
+        for(int i = 2; i < COLS - 1; i += 3)
+            for (int j = 2; j < ROWS - 1; j += 3)
+                map[i][j] = WOOD;
+        for(int i = 3; i < COLS - 1; i += 3)
+            for (int j = 2; j < ROWS - 1; j += 6)
+                map[i][j] = WOOD;
+        for(int i = 4; i < COLS - 1; i += 3)
+            for (int j = 2; j < ROWS - 1; j += 3)
+                map[i][j] = BRICK;
+
+        map[2][2] = WOOD_WITH_EXTRA_BOMB;
+        map[3][2] = WOOD_WITH_EXTRA_GUNPOWDER;
+
+        return map;
+    }
+
+    private void setActualWorld(byte[][] map)
+    {
+        // Set border
+        for(int i = 0; i < COLS; i++)
+        {
+            for(int j = 0; j < ROWS; j++)
+            {
+                if (i == 0 || i == COLS - 1 || j == 0 || j == ROWS - 1)
+                    actualWorld[i][j] = new Brick();
+                else
+                    actualWorld[i][j] = new Clear();
+            }
+        }
+
+        // Set elements from map
+        for(int i = 0; i < COLS; i++)
+        {
+            for (int j = 0; j < ROWS; j++)
+            {
+                if (map[i][j] == WOOD)
+                    actualWorld[i][j] = new Wood();
+                if (map[i][j] == BRICK)
+                    actualWorld[i][j] = new Brick();
+                if (map[i][j] == WOOD_WITH_EXTRA_BOMB)
+                    actualWorld[i][j] = new WoodWithExtraBomb();
+                if (map[i][j] == WOOD_WITH_EXTRA_GUNPOWDER)
+                    actualWorld[i][j] = new WoodWithExtraGunpowder();
+            }
+        }
     }
 }

@@ -1,8 +1,5 @@
 package server;
 
-/**
- * Created by Oem on 2017-06-03.
- */
 public class Config
 {
     private Config(){}

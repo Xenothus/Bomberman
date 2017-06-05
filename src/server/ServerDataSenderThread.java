@@ -6,11 +6,6 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-
-/**
- * Created by Oem on 2017-06-03.
- */
-
 import static server.Config.*;
 import static game.main.Config.*;
 

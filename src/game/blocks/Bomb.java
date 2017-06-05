@@ -3,7 +3,6 @@ package game.blocks;
 import game.main.World;
 import game.main.Player;
 import game.auxiliary.Position;
-
 import static game.main.Config.BOMB;
 import static game.main.Config.BOMB_FIRING_DURATION;
 
@@ -25,7 +24,7 @@ public class Bomb extends Block implements Runnable
 
         species = BOMB;
 
-        walkable = true;
+        walkable = false;
         destroyable = true;
     }
 

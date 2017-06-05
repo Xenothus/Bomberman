@@ -1,7 +1,6 @@
 package server;
 
 import game.main.World;
-
 import static server.Config.*;
 
 class ClientsInfo

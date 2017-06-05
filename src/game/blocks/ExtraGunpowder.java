@@ -1,7 +1,6 @@
 package game.blocks;
 
 import game.auxiliary.Position;
-
 import static game.main.Config.EXTRA_GUNPOWDER;
 
 public class ExtraGunpowder extends Block
