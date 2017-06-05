@@ -33,7 +33,9 @@ public class Bomb extends Block implements Runnable
     {
         try {
             Thread.sleep(BOMB_FIRING_DURATION);
-        }catch(InterruptedException e){}
+        } catch(InterruptedException e){
+            e.printStackTrace();
+        }
 
         explode();
     }

@@ -1,5 +1,8 @@
 package game.auxiliary;
 
+import static game.main.Config.COLS;
+import static game.main.Config.ROWS;
+
 public class Position
 {
     private int x, y;
@@ -28,5 +31,10 @@ public class Position
     public void setY(int y)
     {
         this.y = y;
+    }
+
+    public boolean isCorrect()
+    {
+        return !(x < 0 || x >= COLS || y < 0 || y >= ROWS);
     }
 }

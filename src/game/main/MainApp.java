@@ -1,6 +1,6 @@
 package game.main;
 
-import server.*;
+import server.ServerMainThread;
 
 public class MainApp {
 

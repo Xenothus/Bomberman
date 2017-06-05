@@ -31,7 +31,9 @@ public class Blast implements Runnable
     {
         try {
             Thread.sleep(BOMB_BLAST_DURATION);
-        }catch(InterruptedException e){}
+        } catch(InterruptedException e){
+            e.printStackTrace();
+        }
 
         flamesFade();
     }
@@ -41,9 +43,9 @@ public class Blast implements Runnable
         for (Block block : blocks)
         {
             if (block.getSpecies() == FLAME)
-                world.actualWorld[block.getPosition().getX()][block.getPosition().getY()] = new Clear();
+                world.set(new Clear(), block.getPosition());
             else
-                world.actualWorld[block.getPosition().getX()][block.getPosition().getY()] = block;
+                world.set(block);
         }
     }
 }

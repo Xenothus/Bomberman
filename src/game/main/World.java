@@ -11,7 +11,7 @@ public class World
         private static final World instance = new World();
     }
 
-    public Block[][] actualWorld;
+    private Block[][] actualWorld;
     private Player[] players;
 
     public synchronized static World getInstance()
@@ -27,6 +27,42 @@ public class World
             players[i] = null;
 
         setActualWorld(getDefaultWorldMap());
+    }
+
+
+
+    // WORLDS' ELEMENTS GETTER AND SETTERS
+    public synchronized Block get(Position position)
+    {
+        return actualWorld[position.getX()][position.getY()];
+    }
+
+    public synchronized void set(Block block)
+    {
+        actualWorld[block.getPosition().getX()][block.getPosition().getY()] = block;
+    }
+
+    public synchronized void set(Block block, Position position)
+    {
+        actualWorld[position.getX()][position.getY()] = block;
+    }
+
+
+
+    // VIEW GETTER
+    public synchronized byte[][] getViewModel()
+    {
+        byte [][] viewModel = new byte[COLS][ROWS];
+        for(int i = 0; i < COLS; i++)
+        {
+            for(int j = 0; j < ROWS; j++)
+            {
+                if(actualWorld[i][j] != null)
+                    viewModel[i][j] = actualWorld[i][j].getSpecies();
+            }
+        }
+
+        return viewModel;
     }
 
 
@@ -65,6 +101,20 @@ public class World
         players[ID].performAction(command);
     }
 
+    public synchronized void playerSimpleMove(int ID, Position current, Position destination)
+    {
+        actualWorld[current.getX()][current.getY()] = new Clear();
+        actualWorld[destination.getX()][destination.getY()] = new Bomberman(ID);
+    }
+
+    public synchronized void playerLeaveBomb(int ID, Position current, Position destination)
+    {
+        actualWorld[current.getX()][current.getY()] =
+                ((BombermanOnBomb) actualWorld[current.getX()][current.getY()]).getBomb();
+
+        actualWorld[destination.getX()][destination.getY()] = new Bomberman(ID);
+    }
+
 
 
     // BOMB METHODS
@@ -75,7 +125,9 @@ public class World
 
         try {
             Thread.sleep(10);
-        }catch(InterruptedException e){}
+        } catch(InterruptedException e){
+            e.printStackTrace();
+        }
 
         actualWorld[x][y] = new BombermanOnBomb(
                 (Bomberman) actualWorld[x][y],
@@ -157,24 +209,6 @@ public class World
         }
 
         new Thread(blast).start();
-    }
-
-
-
-    // VIEW GETTER
-    public synchronized byte[][] getViewModel()
-    {
-        byte [][] viewModel = new byte[COLS][ROWS];
-        for(int i = 0; i < COLS; i++)
-        {
-            for(int j = 0; j < ROWS; j++)
-            {
-                if(actualWorld[i][j] != null)
-                    viewModel[i][j] = actualWorld[i][j].getSpecies();
-            }
-        }
-
-        return viewModel;
     }
 
 

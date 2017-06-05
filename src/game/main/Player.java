@@ -3,14 +3,13 @@ package game.main;
 import game.auxiliary.Position;
 import game.blocks.Bomb;
 import game.blocks.Bomberman;
-import game.blocks.BombermanOnBomb;
 import game.blocks.Clear;
 import static game.main.Config.*;
 
 public class Player
 {
-    public int ID;
-    public Position position;
+    int ID;
+    Position position;
 
     private World world;
     private boolean isAlive;
@@ -18,7 +17,7 @@ public class Player
     private int bombsCount;
     private int bombBlastRadius;
 
-    public Player(World world, int ID)
+    Player(World world, int ID)
     {
         this.ID = ID;
         this.world = world;
@@ -28,13 +27,7 @@ public class Player
         bombBlastRadius = 1;
         position = PLAYERS_INITIAL_POSITIONS[ID];
 
-        world.actualWorld[position.getX()][position.getY()] = new Bomberman(ID);
-    }
-
-    public void die()
-    {
-        isAlive = false;
-        System.out.println("Player " + PLAYER_NAMES[ID] + " died");
+        world.set(new Bomberman(ID), position);
     }
 
     public void notifyBombDetonated()
@@ -42,17 +35,13 @@ public class Player
         bombsCount++;
     }
 
-    public void addBomb()
+    void die()
     {
-        bombsCount++;
+        isAlive = false;
+        System.out.println("Player " + PLAYER_NAMES[ID] + " died");
     }
 
-    public void addBlastRadius()
-    {
-        bombBlastRadius++;
-    }
-
-    public void performAction(byte command)
+    void performAction(byte command)
     {
         if (!isAlive)
             return;
@@ -63,50 +52,32 @@ public class Player
             return;
         }
 
-        int x = position.getX();
-        int y = position.getY();
+        Position current = position;
+        Position destination = new Position(
+                position.getX() + POSITIONS[command][X],
+                position.getY() + POSITIONS[command][Y]);
 
-        int xStep = POSITIONS[command][X];
-        int yStep = POSITIONS[command][Y];
-
-        if (x + xStep < 0 || x + xStep >= COLS ||
-            y + yStep < 0 || y + yStep >= ROWS)
+        if (!destination.isCorrect())
             return;
 
-        if (world.actualWorld[x + xStep][y + yStep].isWalkable())
+        if (world.get(destination).isWalkable())
         {
-            Position destination = new Position(x + xStep, y + yStep);
-
-            if (world.actualWorld[x][y].isPlayerOnBomb())
-                getOutOfBomb(position, destination);
-            else if (world.actualWorld[x + xStep][y + yStep].getSpecies() == FLAME) {
+            if (world.get(current).isPlayerOnBomb()) {
+                world.playerLeaveBomb(ID, current, destination);
+            } else if (world.get(destination).getSpecies() == FLAME) {
                 die();
-                world.actualWorld[x][y] = new Clear();
-            } else if (world.actualWorld[x + xStep][y + yStep].getSpecies() == EXTRA_BOMB) {
+                world.set(new Clear(), current);
+            } else if (world.get(destination).getSpecies() == EXTRA_BOMB) {
                 addBomb();
-                simpleMove(position, destination);
-            } else if (world.actualWorld[x + xStep][y + yStep].getSpecies() == EXTRA_GUNPOWDER) {
+                world.playerSimpleMove(ID, current, destination);
+            } else if (world.get(destination).getSpecies() == EXTRA_GUNPOWDER) {
                 addBlastRadius();
-                simpleMove(position, destination);
+                world.playerSimpleMove(ID, current, destination);
             } else
-                simpleMove(position, destination);
+                world.playerSimpleMove(ID, current, destination);
+
+            position = destination;
         }
-    }
-
-    private void simpleMove(Position current, Position destination)
-    {
-        world.actualWorld[current.getX()][current.getY()] = new Clear();
-        world.actualWorld[destination.getX()][destination.getY()] = new Bomberman(ID);
-        position = destination;
-    }
-
-    private void getOutOfBomb(Position current, Position destination)
-    {
-        world.actualWorld[current.getX()][current.getY()] =
-                ((BombermanOnBomb) world.actualWorld[current.getX()][current.getY()]).getBomb();
-
-        world.actualWorld[destination.getX()][destination.getY()] = new Bomberman(ID);
-        position = destination;
     }
 
     private void placeBomb()
@@ -118,5 +89,15 @@ public class Player
         Bomb bomb = new Bomb(world, this,
                 new Position(position.getX(), position.getY()), bombBlastRadius);
         world.placeBomb(bomb);
+    }
+
+    private void addBomb()
+    {
+        bombsCount++;
+    }
+
+    private void addBlastRadius()
+    {
+        bombBlastRadius++;
     }
 }
