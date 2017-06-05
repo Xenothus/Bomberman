@@ -6,11 +6,14 @@ public class Config
 {
     private Config(){}
 
+    // Max number of players
     public final static int MAX_PLAYERS_COUNT = 4;
 
+    // World's dimensions
     public final static int COLS = 20;
     public final static int ROWS = 15;
 
+    // Block types
     public final static int BLOCKS_TYPE_COUNT = 17;
 
     public final static byte CLEAR = 0;
@@ -25,6 +28,15 @@ public class Config
     public final static byte[] BOMBERMEN = {9, 10, 11, 12};
     public final static byte[] BOMBERMEN_ON_BOMB = {13, 14, 15, 16};
 
+    // Players' names
+    public final static String[] PLAYER_NAMES = {
+            "Kasia",
+            "Lukasz",
+            "Andrzej",
+            "Patryk"
+    };
+
+    // Players initial positions
     public final static Position[] PLAYERS_INITIAL_POSITIONS = {
             new Position(1, 1),
             new Position(COLS - 2, 1),
@@ -32,23 +44,18 @@ public class Config
             new Position(COLS - 2, ROWS - 2),
     };
 
-    public final static int BOMB_FIRING_DURATION = 2000;
-    public final static int BOMB_BLAST_DURATION = 1000;
-
+    // Players actions
     public final static byte MOVE_UP = 0;
     public final static byte MOVE_DOWN = 1;
     public final static byte MOVE_LEFT = 2;
     public final static byte MOVE_RIGHT = 3;
     public final static byte PLANT_BOMB = 4;
 
-    public final static byte UP = 0;
-    public final static byte DOWN = 1;
-    public final static byte LEFT = 2;
-    public final static byte RIGHT = 3;
+    // Duration values
+    public final static int BOMB_FIRING_DURATION = 2000;
+    public final static int BOMB_BLAST_DURATION = 1000;
 
-    public final static byte X = 0;
-    public final static byte Y = 1;
-
+    // Position counting helper
     public final static int[][] POSITIONS = {
             {0, -1},
             {0, 1},
@@ -56,10 +63,11 @@ public class Config
             {1, 0}
     };
 
-    public final static String[] PLAYER_NAMES = {
-            "Kasia",
-            "Lukasz",
-            "Andrzej",
-            "Patryk"
-    };
+    // X & Y index values
+    public final static byte X = 0;
+    public final static byte Y = 1;
+
+
+
+
 }

@@ -48,7 +48,7 @@ public class Player
 
         if (command == PLANT_BOMB)
         {
-            placeBomb();
+            plantBomb();
             return;
         }
 
@@ -63,7 +63,7 @@ public class Player
         if (world.get(destination).isWalkable())
         {
             if (world.get(current).isPlayerOnBomb()) {
-                world.playerLeaveBomb(ID, current, destination);
+                world.playerLeavePlantedBomb(ID, current, destination);
             } else if (world.get(destination).getSpecies() == FLAME) {
                 die();
                 world.set(new Clear(), current);
@@ -80,15 +80,18 @@ public class Player
         }
     }
 
-    private void placeBomb()
+    private void plantBomb()
     {
         if (bombsCount == 0)
+            return;
+
+        if (world.get(position).isPlayerOnBomb())
             return;
 
         bombsCount--;
         Bomb bomb = new Bomb(world, this,
                 new Position(position.getX(), position.getY()), bombBlastRadius);
-        world.placeBomb(bomb);
+        world.plantBomb(bomb);
     }
 
     private void addBomb()

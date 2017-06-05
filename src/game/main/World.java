@@ -107,7 +107,7 @@ public class World
         actualWorld[destination.getX()][destination.getY()] = new Bomberman(ID);
     }
 
-    public synchronized void playerLeaveBomb(int ID, Position current, Position destination)
+    public synchronized void playerLeavePlantedBomb(int ID, Position current, Position destination)
     {
         actualWorld[current.getX()][current.getY()] =
                 ((BombermanOnBomb) actualWorld[current.getX()][current.getY()]).getBomb();
@@ -118,7 +118,7 @@ public class World
 
 
     // BOMB METHODS
-    public synchronized void placeBomb(Bomb bomb)
+    public synchronized void plantBomb(Bomb bomb)
     {
         int x = bomb.getPosition().getX();
         int y = bomb.getPosition().getY();
