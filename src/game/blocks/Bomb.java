@@ -27,7 +27,7 @@ public class Bomb extends Block implements Runnable
         this.position = position;
         this.blastRadius = blastRadius;
 
-        walkable = true;
+        walkable = false;
         species = BOMB;
         destroyable = true;
     }

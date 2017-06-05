@@ -83,8 +83,6 @@ public class Player
 
             if (world.actualWorld[x][y].isPlayerOnBomb())
                 getOutOfBomb(position, destination);
-            else if (world.actualWorld[x + xStep][y + yStep].getSpecies() == BOMB)
-                standOnBomb(position, destination);
             else if (world.actualWorld[x + xStep][y + yStep].getSpecies() == EXTRA_BOMB) {
                 addBomb();
                 simpleMove(position, destination);
@@ -109,21 +107,6 @@ public class Player
                 ((BombermanOnBomb) world.actualWorld[current.getX()][current.getY()]).getBomb();
 
         world.actualWorld[destination.getX()][destination.getY()] = new Bomberman(ID);
-        position = destination;
-    }
-
-    private void standOnBomb(Position current, Position destination)
-    {
-        BombermanOnBomb bob = new BombermanOnBomb(
-                (Bomberman) world.actualWorld[current.getX()][current.getY()],
-                (Bomb) world.actualWorld[destination.getX()][destination.getY()]
-        );
-
-        world.actualWorld[current.getX()][current.getY()] = new Clear();
-        world.actualWorld[destination.getX()][destination.getY()] = new Clear();
-
-        world.actualWorld[destination.getX()][destination.getY()] = bob;
-
         position = destination;
     }
 
