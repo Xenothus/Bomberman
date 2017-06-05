@@ -1,16 +1,18 @@
 package game.blocks;
 
-import static game.main.Config.*;
+import game.auxiliary.Position;
 
-/**
- * Created by Oem on 2017-06-04.
- */
+import static game.main.Config.EXTRA_BOMB;
+
 public class ExtraBomb extends Block
 {
-    public ExtraBomb()
+    public ExtraBomb(Position position)
     {
+        this.position = position;
+
+        species = EXTRA_BOMB;
+
         walkable = true;
         destroyable = true;
-        species = EXTRA_BOMB;
     }
 }

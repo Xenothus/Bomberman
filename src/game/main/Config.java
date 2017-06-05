@@ -36,6 +36,7 @@ public class Config
     };
 
     public final static int BOMB_FIRING_DURATION = 2000;
+    public final static int BOMB_BLAST_DURATION = 1000;
 
     public final static byte MOVE_UP = 0;
     public final static byte MOVE_DOWN = 1;

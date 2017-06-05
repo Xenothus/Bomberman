@@ -1,12 +1,11 @@
 package game.main;
 
 import game.blocks.*;
-import game.effects.Flame;
+import game.effects.Blast;
+import game.blocks.Flame;
 import game.auxiliary.Position;
 
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 
 import static game.main.Config.*;
@@ -20,7 +19,7 @@ public class World
         private static final World instance = new World();
     }
 
-    Block[][] actualWorld;
+    public Block[][] actualWorld;
     Player[] players = new Player[MAX_PLAYERS_COUNT];
     List<Flame> flames;
 
@@ -136,17 +135,19 @@ public class World
 
     public synchronized void explodeBomb(Position pos, int blastRadius)
     {
-        int[][] pattern = new int[4][blastRadius];
-        for (int i = 0; i < pattern.length; i++)
-            for (int k = 0; k < pattern[0].length; k++)
-                pattern[i][k] = 0;
+        Blast blast = new Blast(this);
 
         int x = pos.getX();
         int y = pos.getY();
 
         //MID
+        Flame flame = new Flame(this, new Position(x, y));
+
         if (actualWorld[x][y].isPlayerOnBomb())
             players[((BombermanOnBomb) actualWorld[x][y]).getBomberman().getPlayerID()].die();
+
+        actualWorld[x][y] = flame;
+        blast.add(flame);
 
         //UP, DOWN, LEFT, RIGHT
         Block currentBlock;
@@ -164,63 +165,49 @@ public class World
                     break;
 
                 currentBlock = actualWorld[Xi][Yi];
+                flame = new Flame(this, new Position(Xi, Yi));
 
                 if (currentBlock == null || currentBlock.isDestroyable())
                 {
-                    pattern[direction][i - 1] = 1;
-                    checkBlock(currentBlock, Xi, Yi);
+                    if (currentBlock.isPlayer())
+                    {
+                        players[((Bomberman)currentBlock).getPlayerID()].die();
+                        actualWorld[Xi][Yi] = flame;
+                        blast.add(flame);
+                    }
+                    else
+                    {
+                        switch (currentBlock.getSpecies())
+                        {
+                            case BOMB:
+                                ((Bomb) currentBlock).explode();
+                                break;
+
+                            case WOOD_WITH_EXTRA_BOMB:
+                                actualWorld[Xi][Yi] = flame;
+                                blast.add(new ExtraBomb(new Position(Xi, Yi)));
+                                break;
+
+                            case WOOD_WITH_EXTRA_GUNPOWDER:
+                                actualWorld[Xi][Yi] = flame;
+                                blast.add(new ExtraGunpowder(new Position(Xi, Yi)));
+                                break;
+
+                            default:
+                                actualWorld[Xi][Yi] = flame;
+                                blast.add(flame);
+                                break;
+                        }
+                    }
                 }
                 else break;
             }
         }
 
-        Flame flame = new Flame(pos,this, pattern);
-
-/*        try {
-            Thread.sleep(10);
-        }catch(InterruptedException e){}*/
-
-        actualWorld[pos.getX()][pos.getY()] = new Clear();
-        flames.add(flame);
-
-        new Thread(flame).start();
+        new Thread(blast).start();
     }
 
-    private void checkBlock(Block block, int x, int y)
-    {
-        if (block.isPlayer())
-        {
-            players[block.getPlayerID()].die();
-            actualWorld[x][y] = new Clear();
-            return;
-        }
-
-        switch (block.getSpecies())
-        {
-            case BOMB:
-                ((Bomb) block).explode();
-                break;
-
-            case WOOD_WITH_EXTRA_BOMB:
-                actualWorld[x][y] = new ExtraBomb();
-                break;
-
-            case WOOD_WITH_EXTRA_GUNPOWDER:
-                actualWorld[x][y] = new ExtraGunpowder();
-                break;
-
-            default:
-                actualWorld[x][y] = new Clear();
-                break;
-        }
-    }
-
-    public void stopFlame(Flame flame)
-    {
-        flames.remove(flame);
-    }
-
-    public synchronized byte[][] getViewTable()
+    public synchronized byte[][] getViewModel()
     {
         byte [][] viewModel = new byte[COLS][ROWS];
         for(int i = 0; i < COLS; i++)
@@ -229,51 +216,6 @@ public class World
             {
                 if(actualWorld[i][j] != null)
                     viewModel[i][j] = actualWorld[i][j].getSpecies();
-            }
-        }
-
-        for (Iterator<Flame> it = flames.iterator(); it.hasNext();)
-        {
-            Flame flame = it.next();
-            if (flame != null)
-            {
-                if (!flame.isExisting())
-                    it.remove();
-                else
-                {
-                    int x = flame.getPosition().getX();
-                    int y = flame.getPosition().getY();
-
-                    viewModel[x][y] = FLAME;
-
-                    int[][] pattern = flame.getPattern();
-
-                    for (int j = 0; j < pattern.length; j++)            // direction
-                    {
-                        for (int k = 0; k < pattern[0].length; k++)     // each element
-                        {
-                            if (pattern[j][k] == 1) {
-                                switch (j) {
-                                    case UP:
-                                        viewModel[x][y - k - 1] = FLAME;
-                                        break;
-
-                                    case LEFT:
-                                        viewModel[x - k - 1][y] = FLAME;
-                                        break;
-
-                                    case RIGHT:
-                                        viewModel[x + k + 1][y] = FLAME;
-                                        break;
-
-                                    case DOWN:
-                                        viewModel[x][y + k + 1] = FLAME;
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                }
             }
         }
 

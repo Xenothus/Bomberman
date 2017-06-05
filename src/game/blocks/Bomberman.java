@@ -2,9 +2,6 @@ package game.blocks;
 
 import static game.main.Config.BOMBERMEN;
 
-/**
- * Created by Oem on 2017-06-04.
- */
 public class Bomberman extends Block
 {
     private int playerID;
@@ -13,10 +10,12 @@ public class Bomberman extends Block
     {
         this.playerID = playerID;
 
-        walkable = false;
-        player = true;
         species = BOMBERMEN[playerID];
+
+        walkable = false;
         destroyable = true;
+
+        player = true;
     }
 
     public int getPlayerID()

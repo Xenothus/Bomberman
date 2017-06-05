@@ -1,21 +1,17 @@
 package game.blocks;
 
 import game.main.World;
+import game.main.Player;
 import game.auxiliary.Position;
 
-import static game.main.Config.*;
+import static game.main.Config.BOMB;
+import static game.main.Config.BOMB_FIRING_DURATION;
 
-import game.main.Player;
-
-
-/**
- * Created by User on 04.04.2017.
- */
 public class Bomb extends Block implements Runnable
 {
     private World world;
     private Player player;
-    private Position position;
+
     private int blastRadius;
     private boolean existing = true;
 
@@ -27,8 +23,9 @@ public class Bomb extends Block implements Runnable
         this.position = position;
         this.blastRadius = blastRadius;
 
-        walkable = true;
         species = BOMB;
+
+        walkable = true;
         destroyable = true;
     }
 
@@ -50,10 +47,5 @@ public class Bomb extends Block implements Runnable
             world.explodeBomb(position, blastRadius);
             player.notifyBombDetonated();
         }
-    }
-
-    public Position getPosition()
-    {
-        return position;
     }
 }

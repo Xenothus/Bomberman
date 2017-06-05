@@ -1,10 +1,7 @@
 package game.blocks;
 
-import static game.main.Config.*;
+import static game.main.Config.BOMBERMEN_ON_BOMB;
 
-/**
- * Created by Oem on 2017-06-04.
- */
 public class BombermanOnBomb extends Block
 {
     private Bomberman bomberman;
@@ -15,9 +12,10 @@ public class BombermanOnBomb extends Block
         this.bomberman = bomberman;
         this.bomb = bomb;
 
+        species = BOMBERMEN_ON_BOMB[bomberman.getPlayerID()];
+
         walkable = false;
         playerOnBomb = true;
-        species = BOMBERMEN_ON_BOMB[bomberman.getPlayerID()];
     }
 
     public Bomberman getBomberman()

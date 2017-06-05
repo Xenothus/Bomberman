@@ -39,7 +39,7 @@ public class ServerDataSenderThread implements Runnable {
             while (clientsInfo.isConnected(clientID))
             {
                 //Sending data to client
-                byte[][] array2D = World.getInstance().getViewTable();
+                byte[][] array2D = World.getInstance().getViewModel();
                 int bufferIt = 0;
                 for (int i = 0; i < COLS; i++)
                 {

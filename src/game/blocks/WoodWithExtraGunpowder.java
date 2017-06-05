@@ -1,10 +1,7 @@
 package game.blocks;
 
-import static game.main.Config.*;
+import static game.main.Config.WOOD_WITH_EXTRA_GUNPOWDER;
 
-/**
- * Created by Oem on 2017-06-04.
- */
 public class WoodWithExtraGunpowder extends Wood
 {
     public WoodWithExtraGunpowder()
