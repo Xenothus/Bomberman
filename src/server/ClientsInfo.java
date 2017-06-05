@@ -1,17 +1,18 @@
 package server;
 
-/**
- * Created by Oem on 2017-06-04.
- */
-public class ClientsInfo
-{
-    private int clientsCount;
+import static server.Config.*;
 
+class ClientsInfo
+{
     private static class SingletonHelper {
         private static final ClientsInfo instance = new ClientsInfo();
     }
 
-    public synchronized static ClientsInfo getInstance()
+    private int clientsCount;
+    private boolean[] isConnected = new boolean[CLIENTS_MAX_NUM];
+    private Object[] isConnectedLocks = new Object[CLIENTS_MAX_NUM];
+
+    static ClientsInfo getInstance()
     {
         return SingletonHelper.instance;
     }
@@ -19,19 +20,56 @@ public class ClientsInfo
     private ClientsInfo()
     {
         clientsCount = 0;
+        for (int i = 0; i < CLIENTS_MAX_NUM; i++)
+        {
+            isConnected[i] = false;
+            isConnectedLocks[i] = new Object();
+        }
     }
 
-    public synchronized int getClientsCount()
+    boolean takePlayerSlot(int ID)
+    {
+        synchronized (isConnectedLocks[ID])
+        {
+            if (isConnected[ID])
+                return false;
+
+            isConnected[ID] = true;
+            return true;
+        }
+    }
+
+    boolean releasePlayerSlot(int ID)
+    {
+        synchronized (isConnectedLocks[ID])
+        {
+            if (!isConnected[ID])
+                return false;
+
+            isConnected[ID] = false;
+            return true;
+        }
+    }
+
+    boolean isConnected(int ID)
+    {
+        synchronized (isConnectedLocks[ID])
+        {
+            return isConnected[ID];
+        }
+    }
+
+    synchronized int getClientsCount()
     {
         return clientsCount;
     }
 
-    public synchronized void decrementClientsCount()
+    synchronized void decrementClientsCount()
     {
         clientsCount--;
     }
 
-    public synchronized void incrementClientsCount()
+    synchronized void incrementClientsCount()
     {
         clientsCount--;
     }

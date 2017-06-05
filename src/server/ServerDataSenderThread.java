@@ -16,12 +16,16 @@ import static game.main.Config.*;
 
 public class ServerDataSenderThread implements Runnable {
 
-    private InetAddress clientIP;
+    private final ClientsInfo clientsInfo = ClientsInfo.getInstance();
+    private int clientID;
+
+    private InetAddress clientIPAddress;
     private int portUDP;
 
-    public ServerDataSenderThread(InetAddress ip, int portUDP)
+    ServerDataSenderThread(int clientID, InetAddress clientIPAddress, int portUDP)
     {
-        clientIP = ip;
+        this.clientID = clientID;
+        this.clientIPAddress = clientIPAddress;
         this.portUDP = portUDP;
     }
 
@@ -30,10 +34,9 @@ public class ServerDataSenderThread implements Runnable {
     {
         try (DatagramSocket socket = new DatagramSocket())
         {
-            // TODO server has to send data to client, so you need to get client IP and put it here
             byte[] buffer = new byte[BUFFER_SIZE_UDP];
 
-            while (true)
+            while (clientsInfo.isConnected(clientID))
             {
                 //Sending data to client
                 byte[][] array2D = World.getInstance().getViewTable();
@@ -48,7 +51,7 @@ public class ServerDataSenderThread implements Runnable {
                 }
 
                 DatagramPacket dps = new DatagramPacket(
-                        buffer, BUFFER_SIZE_UDP, clientIP, portUDP);
+                        buffer, BUFFER_SIZE_UDP, clientIPAddress, portUDP);
                 socket.send(dps);
             }
         }

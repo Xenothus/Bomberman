@@ -21,10 +21,8 @@ public class World
     }
 
     Block[][] actualWorld;
-    List<Player> players;
+    Player[] players = new Player[MAX_PLAYERS_COUNT];
     List<Flame> flames;
-
-    private boolean[] playerCharacterAvailability;
 
     public synchronized static World getInstance()
     {
@@ -34,12 +32,9 @@ public class World
     private World()
     {
         this.actualWorld = new Block[COLS][ROWS];
-        this.players = new LinkedList<>();
-        this.flames = new ArrayList<>();
-
-        playerCharacterAvailability = new boolean[MAX_PLAYERS_COUNT];
         for (int i = 0; i < MAX_PLAYERS_COUNT; i++)
-            playerCharacterAvailability[i] = true;
+            players[i] = null;
+        this.flames = new ArrayList<>();
 
         byte[][] map = getDefaultWorldMap();
 
@@ -70,7 +65,7 @@ public class World
         }
     }
 
-    public byte[][] getDefaultWorldMap()
+    private byte[][] getDefaultWorldMap()
     {
         byte[][] map = new byte[COLS][ROWS];
         for(int i = 2; i < COLS - 1; i += 3)
@@ -89,49 +84,14 @@ public class World
         return map;
     }
 
-    public boolean takePlayerCharacter(int ID)
+    public synchronized void joinPlayerWithID(int ID)
     {
-        if (!playerCharacterAvailability[ID])
-            return false;
-
-        playerCharacterAvailability[ID] = false;
-        return true;
+        players[ID] = new Player(this, ID);
     }
 
-    public synchronized void addNewPlayer(int ID)
+    public synchronized void executePlayerCommand(int ID, byte command)
     {
-        players.add(new Player(this, ID));
-    }
-
-    public synchronized void executeCommand(int ID, byte command)
-    {
-        int index = findPlayerIndexWithID(ID);
-        if (index == -1)
-            return;
-
-        players.get(index).performAction(command);
-    }
-
-    private int findPlayerIndexWithID(int ID)
-    {
-        int i;
-        boolean found = false;
-        for (i = 0; i < players.size(); i++)
-        {
-            if (players.get(i).ID == ID)
-            {
-                found = true;
-                break;
-            }
-        }
-
-        if (!found)
-        {
-            System.err.println("Could not find player");
-            return -1;
-        }
-
-        return i;
+        players[ID].performAction(command);
     }
 
     public synchronized void placeBomb(Bomb bomb)
@@ -163,14 +123,7 @@ public class World
 
         //MID
         if (actualWorld[x][y].isPlayerOnBomb())
-        {
-            players.get(
-                    findPlayerIndexWithID(
-                            ((BombermanOnBomb) actualWorld[x][y])
-                                    .getBomberman()
-                                    .getPlayerID()))
-                    .die();
-        }
+            players[((BombermanOnBomb) actualWorld[x][y]).getBomberman().getPlayerID()].die();
 
         //UP, DOWN, LEFT, RIGHT
         Block currentBlock;
@@ -214,7 +167,7 @@ public class World
     {
         if (block.isPlayer())
         {
-            players.get(findPlayerIndexWithID(block.getPlayerID())).die();
+            players[block.getPlayerID()].die();
             actualWorld[x][y] = new Clear();
             return;
         }

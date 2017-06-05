@@ -12,12 +12,15 @@ import static server.Config.*;
 
 public class ServerCommandsReceiverThread implements Runnable {
 
-    private Socket socket;
-    private InetAddress clientIP;
-    private int portUDP;
+    private final ClientsInfo clientsInfo = ClientsInfo.getInstance();
+    private final World world = World.getInstance();
     private int clientID;
 
-    public ServerCommandsReceiverThread(Socket socket, int portUDP)
+    private Socket socket;
+    private InetAddress clientIPAddress;
+    private int portUDP;
+
+    ServerCommandsReceiverThread(Socket socket, int portUDP)
     {
         this.socket = socket;
         this.portUDP = portUDP;
@@ -29,21 +32,21 @@ public class ServerCommandsReceiverThread implements Runnable {
         if (!connectWithClient())
             return;
 
-        new Thread(new ServerDataSenderThread(clientIP, portUDP + 1)).start();
+        new Thread(new ServerDataSenderThread(clientID, clientIPAddress, portUDP + 1)).start();
 
         try (DatagramSocket socket = new DatagramSocket(portUDP))
         {
             InetAddress ip = InetAddress.getByName(DEFAULT_SERVER_IP);
             byte[] buffer = new byte[BUFFER_SIZE_UDP];
 
-            while (true)
+            while (clientsInfo.isConnected(clientID))
             {
                 //Receiving order message from client
                 DatagramPacket dp = new DatagramPacket(buffer, BUFFER_SIZE_UDP);
                 socket.receive(dp);
                 byte command = buffer[0];
 
-                World.getInstance().executeCommand(clientID, command);
+                world.executePlayerCommand(clientID, command);
             }
         }
         catch (IOException e)
@@ -66,11 +69,11 @@ public class ServerCommandsReceiverThread implements Runnable {
             String received = in.readUTF();
             String clientIPString = received.split("-")[0];
             String selectedPlayerString = received.split("-")[1];
-            clientIP = InetAddress.getByName(clientIPString);
+            clientIPAddress = InetAddress.getByName(clientIPString);
 
             //Check if player character is available, if yes send UDP port, else denial msg
             int selectedPlayer = Integer.parseInt(selectedPlayerString);
-            if (!World.getInstance().takePlayerCharacter(selectedPlayer))
+            if (!clientsInfo.takePlayerSlot(selectedPlayer))
             {
                 toSendMsg = PLAYER_TAKEN_MSG;
                 result = false;
@@ -87,7 +90,7 @@ public class ServerCommandsReceiverThread implements Runnable {
             //If success add player to world
             System.out.println("Client connected: " + clientIPString);
             clientID = selectedPlayer;
-            World.getInstance().addNewPlayer(clientID);
+            World.getInstance().joinPlayerWithID(clientID);
         }
         catch (IOException e)
         {
