@@ -9,7 +9,7 @@ import static server.Config.*;
 
 public class ServerMainThread implements Runnable
 {
-    private final ExecutorService executor = Executors.newFixedThreadPool(CLIENTS_MAX_NUM);
+    private final ExecutorService executor = Executors.newFixedThreadPool(CLIENTS_MAX_COUNT);
     private int nextPortUDP;
 
     private final ClientsInfo clientsInfo = ClientsInfo.getInstance();
@@ -29,7 +29,7 @@ public class ServerMainThread implements Runnable
 
             while (true)
             {
-                if (clientsInfo.getClientsCount() == CLIENTS_MAX_NUM)
+                if (clientsInfo.getClientsCount() == CLIENTS_MAX_COUNT)
                     continue;
 
                 final Socket socket = serverSocket.accept();

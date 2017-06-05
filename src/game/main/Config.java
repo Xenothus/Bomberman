@@ -7,7 +7,7 @@ public class Config
     private Config(){}
 
     // Max number of players
-    public final static int MAX_PLAYERS_COUNT = 4;
+    public final static int MAX_PLAYERS_COUNT = server.Config.CLIENTS_MAX_COUNT;
 
     // World's dimensions
     public final static int COLS = 20;
@@ -52,6 +52,8 @@ public class Config
     public final static byte PLANT_BOMB = 4;
 
     // Duration values
+    public final static boolean PLAYER_MOVEMENT_COOLDOWN_ENABLED = true;
+    public final static int PLAYER_MOVEMENT_COOLDOWN = 300;
     public final static int BOMB_FIRING_DURATION = 2000;
     public final static int BOMB_BLAST_DURATION = 1000;
 

@@ -10,8 +10,8 @@ class ClientsInfo
     }
 
     private int clientsCount;
-    private boolean[] isConnected = new boolean[CLIENTS_MAX_NUM];
-    private Object[] isConnectedLocks = new Object[CLIENTS_MAX_NUM];
+    private boolean[] isConnected = new boolean[CLIENTS_MAX_COUNT];
+    private Object[] isConnectedLocks = new Object[CLIENTS_MAX_COUNT];
 
     static ClientsInfo getInstance()
     {
@@ -21,7 +21,7 @@ class ClientsInfo
     private ClientsInfo()
     {
         clientsCount = 0;
-        for (int i = 0; i < CLIENTS_MAX_NUM; i++)
+        for (int i = 0; i < CLIENTS_MAX_COUNT; i++)
         {
             isConnected[i] = false;
             isConnectedLocks[i] = new Object();

@@ -17,6 +17,8 @@ public class Player
     private int bombsCount;
     private int bombBlastRadius;
 
+    private long lastMovementTime;
+
     Player(World world, int ID)
     {
         this.ID = ID;
@@ -25,6 +27,7 @@ public class Player
         isAlive = true;
         bombsCount = 1;
         bombBlastRadius = 1;
+        lastMovementTime = 0;
         position = PLAYERS_INITIAL_POSITIONS[ID];
 
         world.set(new Bomberman(ID), position);
@@ -50,6 +53,14 @@ public class Player
         {
             plantBomb();
             return;
+        }
+
+        if (PLAYER_MOVEMENT_COOLDOWN_ENABLED)
+        {
+            long currentTime = System.currentTimeMillis();
+            if (currentTime - lastMovementTime >= PLAYER_MOVEMENT_COOLDOWN)
+                lastMovementTime = currentTime;
+            else return;
         }
 
         Position current = position;
@@ -92,6 +103,8 @@ public class Player
         Bomb bomb = new Bomb(world, this,
                 new Position(position.getX(), position.getY()), bombBlastRadius);
         world.plantBomb(bomb);
+
+        lastMovementTime = System.currentTimeMillis();
     }
 
     private void addBomb()

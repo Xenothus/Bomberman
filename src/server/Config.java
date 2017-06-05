@@ -11,7 +11,7 @@ public class Config
     final static int MAIN_PORT = 8888;
 
     // Max number of clients
-    final static int CLIENTS_MAX_NUM = 4;
+    public final static int CLIENTS_MAX_COUNT = 4;
 
     // First UPD port assigned by server for UDP connection with client
     final static int INITIAL_UDP_PORT = 8000;
